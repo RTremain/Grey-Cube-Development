@@ -16,6 +16,7 @@ namespace GCDGameStore.Models
         }
 
         public virtual DbSet<Employee> Employee { get; set; }
+        public virtual DbSet<Game> Game { get; set; }
 
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +38,8 @@ namespace GCDGameStore.Models
                     .HasColumnName("pwHash")
                     .HasMaxLength(30);
             });
+
+            modelBuilder.Entity<Game>().ToTable("Game");
         }
     }
 }
