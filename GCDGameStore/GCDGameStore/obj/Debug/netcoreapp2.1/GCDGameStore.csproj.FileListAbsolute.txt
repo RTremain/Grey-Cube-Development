@@ -83,3 +83,8 @@ C:\Users\Neph\Documents\School\My Work\Grey-Cube-Development\GCDGameStore\GCDGam
 C:\Users\Neph\Documents\School\My Work\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Details.g.cshtml.cs
 C:\Users\Neph\Documents\School\My Work\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Edit.g.cshtml.cs
 C:\Users\Neph\Documents\School\My Work\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Index.g.cshtml.cs
+G:\Level5\MSEnterprise\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Create.g.cshtml.cs
+G:\Level5\MSEnterprise\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Delete.g.cshtml.cs
+G:\Level5\MSEnterprise\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Details.g.cshtml.cs
+G:\Level5\MSEnterprise\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Edit.g.cshtml.cs
+G:\Level5\MSEnterprise\Grey-Cube-Development\GCDGameStore\GCDGameStore\obj\Debug\netcoreapp2.1\Razor\Views\Game\Index.g.cshtml.cs
