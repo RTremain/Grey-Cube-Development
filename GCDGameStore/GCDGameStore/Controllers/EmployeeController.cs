@@ -55,26 +55,42 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeId,Name,PwHash")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Name,PwHash")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                string password = "Password1";
+                string password = employee.PwHash;
                 byte[] salt = new byte[128 / 8];
                 using (var rng = RandomNumberGenerator.Create())
                 {
                     rng.GetBytes(salt);
                 }
+
+                employee.PwSalt = Convert.ToBase64String(salt);
+
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: password,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA1,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
+                    password: password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
                 employee.PwHash = hashed;
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Add(employee);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+
+                        ModelState.AddModelError("", $"Error: {ex.GetBaseException().Message}");
+                    }
+                }
+
             }
             return View(employee);
         }
