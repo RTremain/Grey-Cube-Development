@@ -50,6 +50,54 @@ namespace GCDGameStore.Controllers
             return View();
         }
 
+        // GET: Employee/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult LoginSuccess()
+        {
+            return View();
+        }
+
+        // POST: Employee/Login
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Name,PwHash")] Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                var employeeCheck = await _context.Employee
+                .FirstOrDefaultAsync(m => m.Name == employee.Name);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                employee.PwSalt = employeeCheck.PwSalt;
+
+                byte[] salt = Convert.FromBase64String(employee.PwSalt);
+
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: employee.PwHash,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+                employee.PwHash = hashed;
+
+                if (employee.PwHash == employeeCheck.PwHash)
+                {
+                    return RedirectToAction(nameof(LoginSuccess));
+                }
+
+            }
+            return View(employee);
+        }
+
         // POST: Employee/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
