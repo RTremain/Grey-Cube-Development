@@ -8,5 +8,6 @@ namespace GCDGameStore.Models
         public int EmployeeId { get; set; }
         public string Name { get; set; }
         public string PwHash { get; set; }
+        public string PwSalt { get; set; }
     }
 }

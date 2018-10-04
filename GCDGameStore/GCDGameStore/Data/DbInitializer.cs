@@ -15,8 +15,8 @@ namespace GCDGameStore.Data
             {
                 var employees = new Employee[]
                 {
-                new Employee{Name="Mike", PwHash="Password1" },
-                new Employee{Name="Steve", PwHash="Password2" }
+                new Employee{Name="Mike", PwHash="Password1", PwSalt="" },
+                new Employee{Name="Steve", PwHash="Password2", PwSalt="" }
                 };
 
                 foreach (Employee e in employees)
