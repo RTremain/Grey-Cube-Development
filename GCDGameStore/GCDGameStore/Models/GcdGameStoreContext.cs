@@ -17,6 +17,7 @@ namespace GCDGameStore.Models
 
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<Event> Event { get; set; }
 
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +25,7 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Employee>().ToTable("Employee");
 
             modelBuilder.Entity<Game>().ToTable("Game");
+            modelBuilder.Entity<Event>().ToTable("Event");
         }
     }
 }
