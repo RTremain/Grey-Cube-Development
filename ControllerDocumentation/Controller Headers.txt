@@ -1,0 +1,50 @@
+EmployeeController:
+______________________________
+private readonly GcdGameStoreContext _context;
+______________________________
+public EmployeeController(GcdGameStoreContext context)
+public async Task<IActionResult> Index()
+public async Task<IActionResult> Details(int? id)
+public IActionResult Create()
+public IActionResult Login()
+public IActionResult LoginSuccess()
+public async Task<IActionResult> Login([Bind("Name,PwHash")] Employee employee)
+public async Task<IActionResult> Create([Bind("Name,PwHash")] Employee employee)
+public async Task<IActionResult> Edit(int? id)
+public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,Name,PwHash")] Employee employee)
+public async Task<IActionResult> Delete(int? id)
+public async Task<IActionResult> DeleteConfirmed(int id)
+private bool EmployeeExists(int id)
+______________________________
+
+EventController:
+______________________________
+private readonly GcdGameStoreContext _context;
+______________________________
+public EventController(GcdGameStoreContext context)
+public async Task<IActionResult> Index()
+public async Task<IActionResult> Details(int? id)
+public async Task<IActionResult> Delete(int? id)
+public async Task<IActionResult> DeleteConfirmed(int id)
+public IActionResult Create()
+public async Task<IActionResult> Create([Bind("EventId,Title,EventDate,Description")] Event @event)
+public async Task<IActionResult> Edit(int? id)
+public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,EventDate,Description")] Event @event)
+private bool EventExists(int id)
+______________________________
+
+GameController:
+______________________________
+private readonly GcdGameStoreContext _context;
+______________________________
+public EventController(GcdGameStoreContext context)
+public async Task<IActionResult> Index()
+public async Task<IActionResult> Details(int? id)
+public async Task<IActionResult> Delete(int? id)
+public async Task<IActionResult> DeleteConfirmed(int id)
+public IActionResult Create()
+public async Task<IActionResult> Create([Bind("GameID,Title,ReleaseDate")] Game game)
+public async Task<IActionResult> Edit(int? id)
+public async Task<IActionResult> Edit(int id, [Bind("GameID,Title,ReleaseDate")] Game game)
+private bool GameExists(int id)
+______________________________
