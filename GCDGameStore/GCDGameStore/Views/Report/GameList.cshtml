@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Report Index";
+}
+
+<h2>Game List Report</h2>
+
+<h3>@DateTime.Now</h3>
+
+<h3>Game Genre Stats</h3>
+<table>
+    <thead>
+        <tr>
+            <th colspan="4">Top 5 Game Genres</th>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <th>Copies Sold</th>
+            <th>Total Titles</th>
+            <th>Total Wishlist</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Shooter</td>
+            <td>3500</td>
+            <td>275</td>
+            <td>1250</td>
+        </tr>
+        <tr>
+            <td>Platformer</td>
+            <td>2500</td>
+            <td>150</td>
+            <td>800</td>
+        </tr>
+        <tr>
+            <td>RPG</td>
+            <td>2200</td>
+            <td>175</td>
+            <td>750</td>
+        </tr>
+        <tr>
+            <td>Strategy</td>
+            <td>1800</td>
+            <td>150</td>
+            <td>500</td>
+        </tr>
+        <tr>
+            <td>Racing</td>
+            <td>1600</td>
+            <td>125</td>
+            <td>400</td>
+        </tr>
+    </tbody>
+</table>
+
+<a asp-action="Index">Return</a>

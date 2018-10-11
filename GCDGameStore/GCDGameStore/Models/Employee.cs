@@ -15,7 +15,7 @@ namespace GCDGameStore.Models
         [Required]
         public string PwHash { get; set; }
 
-        [Required]
+        
         public string PwSalt { get; set; }
     }
 }

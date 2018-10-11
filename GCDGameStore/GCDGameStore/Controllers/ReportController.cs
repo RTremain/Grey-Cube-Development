@@ -17,9 +17,39 @@ namespace GCDGameStore.Controllers
             _context = context;
         }
         
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            return View();
+        }
+
+        public IActionResult GameList()
+        {
+            return View();
+        }
+
+        public IActionResult GameDetail()
+        {
+            return View();
+        }
+
+        public IActionResult MemberList()
+        {
+            return View();
+        }
+
+        public IActionResult MemberDetail()
+        {
+            return View();
+        }
+
+        public IActionResult WishList()
+        {
+            return View();
+        }
+
+        public IActionResult Sales()
+        {
+            return View();
         }
     }
 }

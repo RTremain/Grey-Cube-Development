@@ -1,48 +1,28 @@
-﻿@model IEnumerable<GCDGameStore.Models.Employee>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Report Index";
 }
 
-<h2>Index</h2>
+<h2>Reports</h2>
 
-<p>
-    <a asp-action="Game">Generate Game Report</a>
-    <a asp-action="Login">Login</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PwSalt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PwHash)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PwSalt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PwHash)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EmployeeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EmployeeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EmployeeId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<ul>
+    <li>
+        <a asp-action="GameList">Generate Game List Report</a>
+    </li>
+    <li>
+        <a asp-action="GameDetail">Generate Game Detail Report</a>
+    </li>
+    <li>
+        <a asp-action="MemberList">Generate Member List Report</a>
+    </li>
+    <li>
+        <a asp-action="MemberDetail">Generate Member Detail Report</a>
+    </li>
+    <li>
+        <a asp-action="WishList">Generate Wish List Report</a>
+    </li>
+    <li>
+        <a asp-action="Sales">Generate Sales Report</a>
+    </li>
+</ul>
+
+
