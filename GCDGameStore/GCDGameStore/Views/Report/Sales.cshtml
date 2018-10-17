@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Report Index";
+}
+
+<h2>Sales Report</h2>
+
+<h3>@DateTime.Now</h3>
+
+<h3>Total Sales for Week</h3>
+<table>
+    <thead>
+        <tr>
+            <th colspan="4">Digital Sales Top 5</th>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <th>Copies Sold</th>
+            <th>Total Revenue</th>
+            <th>Total Key Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Doom</td>
+            <td>450</td>
+            <td>27000</td>
+            <td>9000</td>
+        </tr>
+        <tr>
+            <td>Platformer Quest</td>
+            <td>400</td>
+            <td>25000</td>
+            <td>7000</td>
+        </tr>
+        <tr>
+            <td>ActionShooter</td>
+            <td>350</td>
+            <td>20000</td>
+            <td>6000</td>
+        </tr>
+        <tr>
+            <td>Indie Adventure</td>
+            <td>250</td>
+            <td>16000</td>
+            <td>4000</td>
+        </tr>
+        <tr>
+            <td>AAA DLC Game</td>
+            <td>200</td>
+            <td>12000</td>
+            <td>3000</td>
+        </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+        <tr>
+            <th colspan="5">Physical Sales Top 5</th>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <th>Copies Sold</th>
+            <th>Total Revenue</th>
+            <th>Total Copy Cost</th>
+            <th>Total Shipping Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Doom</td>
+            <td>450</td>
+            <td>27000</td>
+            <td>9000</td>
+            <td>3000</td>
+        </tr>
+        <tr>
+            <td>Platformer Quest</td>
+            <td>400</td>
+            <td>25000</td>
+            <td>7000</td>
+            <td>2500</td>
+        </tr>
+        <tr>
+            <td>ActionShooter</td>
+            <td>350</td>
+            <td>20000</td>
+            <td>6000</td>
+            <td>2000</td>
+        </tr>
+        <tr>
+            <td>Indie Adventure</td>
+            <td>250</td>
+            <td>16000</td>
+            <td>4000</td>
+            <td>1500</td>
+        </tr>
+        <tr>
+            <td>AAA DLC Game</td>
+            <td>200</td>
+            <td>12000</td>
+            <td>3000</td>
+            <td>1000</td>
+        </tr>
+    </tbody>
+</table>
+
+<a asp-action="Index">Return</a>
+
+
