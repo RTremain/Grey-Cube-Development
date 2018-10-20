@@ -1,0 +1,47 @@
+﻿@model IEnumerable<GCDGameStore.Models.Library>
+
+@{
+    ViewData["Title"] = "Library";
+}
+
+<h2>Library</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameId)
+            </th>
+            <td>
+                @Html.DisplayNameFor(model => model.Game)
+            </td>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Game.Title)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LibraryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LibraryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LibraryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

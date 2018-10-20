@@ -1,0 +1,127 @@
+﻿@model IEnumerable<GCDGameStore.Models.Member>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PwSalt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PwHash)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MemberId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.MemberId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MemberId">Delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PwSalt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PwHash)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <th>
+                    @Html.DisplayNameFor(model => model.MailingStreetAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MailingPostalCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MailingCity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MailingProvince)
+                </th>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MailingStreetAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MailingPostalCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MailingCity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MailingProvince)
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingStreetAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingPostalCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingCity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingProvince)
+                </th>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingStreetAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingPostalCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingCity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingProvince)
+                </td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
