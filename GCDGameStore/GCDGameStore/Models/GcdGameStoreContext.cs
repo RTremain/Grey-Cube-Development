@@ -20,8 +20,9 @@ namespace GCDGameStore.Models
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<Library> Library { get; set; }
+        public virtual DbSet<Wishlist> Wishlist { get; set; }
 
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("Employee");
@@ -30,6 +31,7 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Event>().ToTable("Event");
             modelBuilder.Entity<Member>().ToTable("Member");
             modelBuilder.Entity<Library>().ToTable("Library");
+            modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
         }
     }
 }

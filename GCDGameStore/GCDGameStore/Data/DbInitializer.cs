@@ -35,6 +35,11 @@ namespace GCDGameStore.Data
                 {
                     new Game { Title = "Doom", ReleaseDate = new DateTime(2016, 5, 13) },
                     new Game { Title = "Monster Hunter: World", ReleaseDate = new DateTime(2018, 8, 9) },
+                    new Game { Title = "Starcraft 2", ReleaseDate = new DateTime(2010, 7, 10) },
+                    new Game { Title = "Call of Duty: Modern Warfare", ReleaseDate = new DateTime(2007, 11, 7) },
+                    new Game { Title = "The Elder Scrolls V: Skyrim", ReleaseDate = new DateTime(2011, 11, 11) },
+                    new Game { Title = "Minecraft", ReleaseDate = new DateTime(2009, 5, 17) },
+                    new Game { Title = "Battlefield 3", ReleaseDate = new DateTime(2011, 10, 25) },
                     new Game { Title = "Fallout 4", ReleaseDate = new DateTime(2015, 11, 10) }
                 };
 
@@ -92,8 +97,8 @@ namespace GCDGameStore.Data
                     {
                         var libraryGames = new Library[]
                     {
-                        new Library { MemberId=  memberId.MemberId, GameId = gameList[0].GameID },
-                        new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameID }
+                        new Library { MemberId=  memberId.MemberId, GameId = gameList[0].GameId },
+                        new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
                     };
 
                         foreach (Library l in libraryGames)
@@ -105,6 +110,33 @@ namespace GCDGameStore.Data
                     
                 }
                 
+            }
+
+            if (!context.Wishlist.Any())
+            {
+                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+                if (memberId != null)
+                {
+                    int[] gameIds = new int[2];
+                    var gameList = context.Game.ToList();
+
+                    if (gameList.Count >= 4)
+                    {
+                        var wishlistGames = new Wishlist[]
+                    {
+                        new Wishlist { MemberId=  memberId.MemberId, GameId = gameList[2].GameId },
+                        new Wishlist { MemberId = memberId.MemberId, GameId = gameList[3].GameId }
+                    };
+
+                        foreach (Wishlist w in wishlistGames)
+                        {
+                            context.Wishlist.Add(w);
+                        }
+                        context.SaveChanges();
+                    }
+
+                }
+
             }
 
         }

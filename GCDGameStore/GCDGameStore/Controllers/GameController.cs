@@ -33,7 +33,7 @@ namespace GCDGameStore.Controllers
             }
 
             var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.GameID == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
                 return NotFound();
@@ -87,7 +87,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GameID,Title,ReleaseDate")] Game game)
         {
-            if (id != game.GameID)
+            if (id != game.GameId)
             {
                 return NotFound();
             }
@@ -101,7 +101,7 @@ namespace GCDGameStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameExists(game.GameID))
+                    if (!GameExists(game.GameId))
                     {
                         return NotFound();
                     }
@@ -124,7 +124,7 @@ namespace GCDGameStore.Controllers
             }
 
             var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.GameID == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace GCDGameStore.Controllers
 
         private bool GameExists(int id)
         {
-            return _context.Game.Any(e => e.GameID == id);
+            return _context.Game.Any(e => e.GameId == id);
         }
     }
 }

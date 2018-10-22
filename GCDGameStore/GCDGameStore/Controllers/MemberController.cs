@@ -42,6 +42,42 @@ namespace GCDGameStore.Controllers
             return View(library);
         }
 
+        public async Task<IActionResult> Wishlist(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var wishlist = await _context.Wishlist.Include(a => a.Game)
+                .Where(m => m.MemberId == id).ToListAsync();
+
+            if (wishlist == null)
+            {
+                return NotFound();
+            }
+
+            return View(wishlist);
+        }
+
+        // GET: Member/Details/5
+        public async Task<IActionResult> GameDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var game = await _context.Game
+                .FirstOrDefaultAsync(m => m.GameId == id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            return View(game);
+        }
+
         // GET: Member/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -135,6 +171,51 @@ namespace GCDGameStore.Controllers
 
         // GET: Member/Delete/5
         public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var member = await _context.Member
+                .FirstOrDefaultAsync(m => m.MemberId == id);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+            return View(member);
+        }
+
+        public async Task<IActionResult> DeleteWishlistItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var wishlist = await _context.Wishlist.Include(w => w.Game)
+                .FirstOrDefaultAsync(w => w.WishlistId == id);
+            if (wishlist == null)
+            {
+                return NotFound();
+            }
+
+            return View(wishlist);
+        }
+
+        // POST: Member/DeleteWishlistItem/5
+        [HttpPost, ActionName("DeleteWishlistItem")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteWishlistItemConfirmed(int id)
+        {
+            var wishlist = await _context.Wishlist.FindAsync(id);
+            _context.Wishlist.Remove(wishlist);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Wishlist));
+        }
+
+        public async Task<IActionResult> DeleteLibraryItem(int? id)
         {
             if (id == null)
             {
