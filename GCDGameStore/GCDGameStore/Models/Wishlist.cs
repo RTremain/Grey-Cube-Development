@@ -11,8 +11,10 @@ namespace GCDGameStore.Models
     {
         public int WishlistId { get; set; }
 
-
+        [Required]
         public int MemberId { get; set; }
+
+        [Required]
         public int GameId { get; set; }
         public Game Game { get; set; }
     }

@@ -1,7 +1,7 @@
 
 GCD - Iteration Phase 2 Use Cases
 
-16 View profile
+16 View profile - Done
 19 Edit profile
 20 Edit mailing address
 21 Edit shipping address

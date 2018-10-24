@@ -73,8 +73,8 @@ namespace GCDGameStore.Data
 
                 var members = new Member[]
                 {
-                    new Member { Username = "Jalapegnome", PwHash = "Password", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "IdleCyborg", PwHash = "Password2", Email = "b@b.com", Phone = "111 222-3333" }
+                    new Member { Username = "Jalapegnome", PwSalt = "0d3nuW96aA65mhWOwi7RMQ==", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "IdleCyborg", PwSalt = "LxydHI+ySV29m7mnQbvtTQ==", PwHash = "BoW2Aeeb1tSpG82SRdZscpFOdzHr/BNy1dzdIWWPjKw=", Email = "b@b.com", Phone = "111 222-3333" }
                 };
 
                 foreach (Member m in members)

@@ -29,14 +29,12 @@ namespace GCDGameStore.Models
 
         public string MailingStreetAddress { get; set; }
 
-        [DataType(DataType.PostalCode)]
         public string MailingPostalCode { get; set; }
         public string MailingCity { get; set; }
         public string MailingProvince { get; set; }
 
         public string ShippingStreetAddress { get; set; }
 
-        [DataType(DataType.PostalCode)]
         public string ShippingPostalCode { get; set; }
         public string ShippingCity { get; set; }
         public string ShippingProvince { get; set; }

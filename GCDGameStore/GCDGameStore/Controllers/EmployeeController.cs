@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
 
 namespace GCDGameStore.Controllers
 {
@@ -58,6 +59,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult LoginSuccess()
         {
+            HttpContext.Session.SetString("EmployeeLogin", "true");
             return View();
         }
 

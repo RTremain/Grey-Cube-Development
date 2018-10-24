@@ -6,31 +6,73 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace GCDGameStore.Controllers
 {
     public class MemberController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly ILogger _logger;
 
-        public MemberController(GcdGameStoreContext context)
+        public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger)
         {
             _context = context;
+            _logger = logger;
+        }
+
+        private bool IsNotLoggedIn()
+        {
+            if (HttpContext.Session.GetString("MemberId") == null
+                || HttpContext.Session.GetString("MemberId") == "")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsEmployee()
+        {
+            if (HttpContext.Session.GetString("EmployeeLogin") == "true")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         // GET: Member
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Member.ToListAsync());
-        }
-
-        public async Task<IActionResult> Library(int? id)
-        {
-            if (id == null)
+            if (IsNotLoggedIn())
             {
-                return NotFound();
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
             }
 
+            if (IsEmployee())
+            {
+                return View(await _context.Member.ToListAsync());
+            }
+
+            return RedirectToAction(nameof(Details));
+
+        }
+
+        public async Task<IActionResult> Library()
+        {
+            if (IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
+            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            
             var library = await _context.Library.Include(a => a.Game)
                 .Where(m => m.MemberId == id).ToListAsync();
 
@@ -79,12 +121,15 @@ namespace GCDGameStore.Controllers
         }
 
         // GET: Member/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
+            if (IsNotLoggedIn())
             {
-                return NotFound();
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
             }
+
+            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
 
             var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.MemberId == id);
@@ -107,16 +152,90 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MemberId,Username,PwHash,PwSalt,Email,Phone,MailingStreetAddress,MailingPostalCode,MailingCity,MailingProvince,ShippingStreetAddress,ShippingPostalCode,ShippingCity,ShippingProvince")] Member member)
+        public async Task<IActionResult> Create([Bind("Username,PwHash,Email,Phone,MailingStreetAddress,MailingPostalCode,MailingCity,MailingProvince,ShippingStreetAddress,ShippingPostalCode,ShippingCity,ShippingProvince")] Member member)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string password = member.PwHash;
+                byte[] salt = new byte[128 / 8];
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(salt);
+                }
+
+                member.PwSalt = Convert.ToBase64String(salt);
+
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+                member.PwHash = hashed;
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Add(member);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+
+                        ModelState.AddModelError("", $"Error: {ex.GetBaseException().Message}");
+                    }
+                }
             }
             return View(member);
         }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: Employee/Login
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Username,PwHash")] Member member)
+        {
+            if (ModelState.IsValid)
+            {
+                var memberCheck = await _context.Member
+                .FirstOrDefaultAsync(m => m.Username == member.Username);
+                if (member == null)
+                {
+                    return NotFound();
+                }
+
+                member.PwSalt = memberCheck.PwSalt;
+
+                byte[] salt = Convert.FromBase64String(member.PwSalt);
+
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: member.PwHash,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+                member.PwHash = hashed;
+
+                if (member.PwHash == memberCheck.PwHash)
+                {
+                    HttpContext.Session.SetString("Login", "True");
+                    HttpContext.Session.SetString("MemberId", memberCheck.MemberId.ToString());
+                    return RedirectToAction(nameof(Details), new { id = memberCheck.MemberId });
+                }
+
+            }
+            member.PwHash = "";
+            return View(member);
+        }
+
 
         // GET: Member/Edit/5
         public async Task<IActionResult> Edit(int? id)
