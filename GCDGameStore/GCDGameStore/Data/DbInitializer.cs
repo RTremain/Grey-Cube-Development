@@ -96,10 +96,10 @@ namespace GCDGameStore.Data
                     if (gameList.Count >= 2)
                     {
                         var libraryGames = new Library[]
-                    {
-                        new Library { MemberId=  memberId.MemberId, GameId = gameList[0].GameId },
-                        new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
-                    };
+                        {
+                            new Library { MemberId=  memberId.MemberId, GameId = gameList[0].GameId },
+                            new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
+                        };
 
                         foreach (Library l in libraryGames)
                         {
@@ -123,10 +123,10 @@ namespace GCDGameStore.Data
                     if (gameList.Count >= 4)
                     {
                         var wishlistGames = new Wishlist[]
-                    {
-                        new Wishlist { MemberId=  memberId.MemberId, GameId = gameList[2].GameId },
-                        new Wishlist { MemberId = memberId.MemberId, GameId = gameList[3].GameId }
-                    };
+                        {
+                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[2].GameId },
+                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[3].GameId }
+                        };
 
                         foreach (Wishlist w in wishlistGames)
                         {
@@ -139,6 +139,46 @@ namespace GCDGameStore.Data
 
             }
 
+            if (!context.CreditCard.Any())
+            {
+                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+                if (member != null)
+                {
+                    var creditCards = new CreditCard[]
+                    {
+                        new CreditCard
+                        {
+                            CcNum = "5150690040978244",
+                            ExpMonth = 5,
+                            ExpYear = 2022,
+                            Name = "Mike Smith",
+                            StreetAddress = "123 city street",
+                            City = "Waterloo",
+                            Province = "Ontario",
+                            PostalCode = "A1B 2C3",
+                            MemberId = member.MemberId
+                        },
+                        new CreditCard
+                        {
+                            CcNum = "5177244191651488",
+                            ExpMonth = 4,
+                            ExpYear = 2020,
+                            Name = "Mike Smith",
+                            StreetAddress = "123 city street",
+                            City = "Waterloo",
+                            Province = "Ontario",
+                            PostalCode = "A1B 2C3",
+                            MemberId = member.MemberId
+                        }
+                    };
+
+                    foreach (CreditCard c in creditCards)
+                    {
+                        context.CreditCard.Add(c);
+                    }
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

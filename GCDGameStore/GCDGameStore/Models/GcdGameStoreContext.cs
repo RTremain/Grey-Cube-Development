@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using GCDGameStore.Models;
 
 namespace GCDGameStore.Models
 {
@@ -21,6 +22,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<Member> Member { get; set; }
         public virtual DbSet<Library> Library { get; set; }
         public virtual DbSet<Wishlist> Wishlist { get; set; }
+        public virtual DbSet<CreditCard> CreditCard { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +34,8 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Member>().ToTable("Member");
             modelBuilder.Entity<Library>().ToTable("Library");
             modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
+            modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
         }
+
     }
 }

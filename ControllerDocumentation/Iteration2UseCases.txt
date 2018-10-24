@@ -6,8 +6,8 @@ GCD - Iteration Phase 2 Use Cases
 20 Edit mailing address
 21 Edit shipping address
 
-22 Add credit card
-23 Delete credit card
+22 Add credit card - Done
+23 Delete credit card - Done
 
 28 View friends
 29 Add friend
@@ -20,6 +20,7 @@ GCD - Iteration Phase 2 Use Cases
 32 Rate game
 33 Add game review
 
-
-
 39 Register for event
+
+
+
