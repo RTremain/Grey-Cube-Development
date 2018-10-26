@@ -7,21 +7,41 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace GCDGameStore.Controllers
 {
     public class FriendController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly ILogger _logger;
 
-        public FriendController(GcdGameStoreContext context)
+        public FriendController(GcdGameStoreContext context, ILogger<FriendController> logger)
         {
             _context = context;
+            _logger = logger;
+        }
+
+        private bool IsNotLoggedIn()
+        {
+            var memberId = HttpContext.Session.GetString("MemberId");
+            if (memberId == null || memberId == "")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         // GET: Friend
         public async Task<IActionResult> Index()
         {
+            if (IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
             var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
             var gcdGameStoreContext = 
                 _context.Friend
@@ -31,31 +51,16 @@ namespace GCDGameStore.Controllers
             return View(await gcdGameStoreContext.ToListAsync());
         }
 
-        // GET: Friend/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var friend = await _context.Friend
-                .Include(f => f.FriendMember)
-                .Include(f => f.Member)
-                .FirstOrDefaultAsync(m => m.FriendId == id);
-            if (friend == null)
-            {
-                return NotFound();
-            }
-
-            return View(friend);
-        }
-
+        
         // GET: Friend/Create
         public IActionResult Create()
         {
-            ViewData["FriendId"] = new SelectList(_context.Member, "MemberId", "PwHash");
-            ViewData["MemberId"] = new SelectList(_context.Member, "MemberId", "PwHash");
+            if (IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+            HttpContext.Session.SetString("Error", "");
             return View();
         }
 
@@ -64,101 +69,77 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FriendId,MemberId,FriendMemberId")] Friend friend)
+        public async Task<IActionResult> Create(String username)
         {
-            if (ModelState.IsValid)
+            if (IsNotLoggedIn())
             {
-                _context.Add(friend);
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            _logger.LogInformation("Received username: {Message}", username);
+            var friend = await _context.Member.Where(m => m.Username == username).SingleOrDefaultAsync();
+            var memberId = HttpContext.Session.GetString("MemberId");
+
+            HttpContext.Session.SetString("Error", "");
+
+            if (friend == null)
+            {
+                HttpContext.Session.SetString("Error", "User not found.");
+                return View();
+            }
+
+            var friendship = await _context.Friend.Where(f => f.MemberId == Convert.ToInt32(memberId)).Where(f => f.FriendMemberId == friend.MemberId).SingleOrDefaultAsync();
+
+            if (friendship != null)
+            {
+                HttpContext.Session.SetString("Error", "Friendship already exists.");
+                return View();
+            }
+
+            var newFriendship1 = new Friend { MemberId = Convert.ToInt32(memberId), FriendMemberId = friend.MemberId };
+            var newFriendship2 = new Friend { MemberId = friend.MemberId, FriendMemberId = Convert.ToInt32(memberId) };
+
+            try
+            {
+                _context.Add(newFriendship1);
+                _context.Add(newFriendship2);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FriendId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.FriendId);
-            ViewData["MemberId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.MemberId);
-            return View(friend);
+            catch (Exception ex)
+            {
+                HttpContext.Session.SetString("Error", String.Format("Error on add: {0}", ex.Message));
+            }
+            
+            return View();
         }
 
-        // GET: Friend/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var friend = await _context.Friend.FindAsync(id);
-            if (friend == null)
-            {
-                return NotFound();
-            }
-            ViewData["FriendId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.FriendId);
-            ViewData["MemberId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.MemberId);
-            return View(friend);
-        }
-
-        // POST: Friend/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FriendId,MemberId,FriendMemberId")] Friend friend)
-        {
-            if (id != friend.FriendId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(friend);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FriendExists(friend.FriendId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["FriendId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.FriendId);
-            ViewData["MemberId"] = new SelectList(_context.Member, "MemberId", "PwHash", friend.MemberId);
-            return View(friend);
-        }
-
-        // GET: Friend/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var friend = await _context.Friend
-                .Include(f => f.FriendMember)
-                .Include(f => f.Member)
-                .FirstOrDefaultAsync(m => m.FriendId == id);
-            if (friend == null)
-            {
-                return NotFound();
-            }
-
-            return View(friend);
-        }
-
-        // POST: Friend/Delete/5
+       // POST: Friend/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string friendId)
         {
-            var friend = await _context.Friend.FindAsync(id);
-            _context.Friend.Remove(friend);
+            if (IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            var friendIdInt = Convert.ToInt32(friendId);
+
+            var friendship1 = await _context.Friend.Where(f => f.MemberId == memberId).Where(f => f.FriendMemberId == friendIdInt).SingleOrDefaultAsync();
+            var friendship2 = await _context.Friend.Where(f => f.MemberId == friendIdInt).Where(f => f.FriendMemberId == memberId).SingleOrDefaultAsync();
+
+            if (friendship1 == null || friendship2 == null)
+            {
+                _logger.LogError("One or both friendship entires null");
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Friend.Remove(friendship1);
+            _context.Friend.Remove(friendship2);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

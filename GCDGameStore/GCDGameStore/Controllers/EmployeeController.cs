@@ -21,15 +21,35 @@ namespace GCDGameStore.Controllers
             _context = context;
         }
 
+        private bool IsEmployee()
+        {
+            if (HttpContext.Session.GetString("EmployeeLogin") == "true")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         // GET: Employee
         public async Task<IActionResult> Index()
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             return View(await _context.Employee.ToListAsync());
         }
 
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -48,18 +68,38 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Create
         public IActionResult Create()
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             return View();
         }
 
         // GET: Employee/Login
         public IActionResult Login()
         {
+            if (IsEmployee())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.SetString("EmployeeLogin", "false");
+
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult LoginSuccess()
         {
-            HttpContext.Session.SetString("EmployeeLogin", "true");
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
             return View();
         }
 
@@ -93,6 +133,7 @@ namespace GCDGameStore.Controllers
 
                 if (employee.PwHash == employeeCheck.PwHash)
                 {
+                    HttpContext.Session.SetString("EmployeeLogin", "true");
                     return RedirectToAction(nameof(LoginSuccess));
                 }
 
@@ -107,6 +148,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,PwHash")] Employee employee)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (ModelState.IsValid)
             {
                 string password = employee.PwHash;
@@ -148,6 +194,11 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -168,6 +219,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,Name,PwHash")] Employee employee)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id != employee.EmployeeId)
             {
                 return NotFound();
@@ -199,6 +255,11 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -219,6 +280,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             var employee = await _context.Employee.FindAsync(id);
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();

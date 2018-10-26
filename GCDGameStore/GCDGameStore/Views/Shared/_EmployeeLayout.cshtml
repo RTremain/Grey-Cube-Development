@@ -30,9 +30,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Employee" asp-action="Login">Employees</a></li>
+                    <li><a asp-area="" asp-controller="Employee" asp-action="Index">Employee</a></li>
                     <li><a asp-area="" asp-controller="Game" asp-action="Index">Games</a></li>
-                    <li><a asp-area="" asp-controller="Member" asp-action="Login">Members</a></li>
+                    <li><a asp-area="" asp-controller="Event" asp-action="Index">Events</a></li>
+                    <li><a asp-area="" asp-controller="Report" asp-action="Index">Reports</a></li>
+                    <li><a asp-area="" asp-controller="Member" asp-action="Index">Members</a></li>
+                    <li><a asp-area="" asp-controller="Employee" asp-action="Logout">Logout</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

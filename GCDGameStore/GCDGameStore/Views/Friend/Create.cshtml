@@ -1,7 +1,9 @@
 ﻿@model GCDGameStore.Models.Friend
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "_MemberLayout";
 }
 
 <h2>Create</h2>
@@ -10,20 +12,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <p class="text-danger">@Context.Session.GetString("Error")</p>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FriendId" class="control-label"></label>
-                <select asp-for="FriendId" class ="form-control" asp-items="ViewBag.FriendId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <select asp-for="MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FriendMemberId" class="control-label"></label>
-                <input asp-for="FriendMemberId" class="form-control" />
-                <span asp-validation-for="FriendMemberId" class="text-danger"></span>
+                <label class="control-label">Friend's Username</label>
+                <input class="form-control" required name="username"/>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

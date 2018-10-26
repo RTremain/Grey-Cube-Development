@@ -26,8 +26,8 @@ namespace GCDGameStore.Controllers
 
         private bool IsNotLoggedIn()
         {
-            if (HttpContext.Session.GetString("MemberId") == null
-                || HttpContext.Session.GetString("MemberId") == "")
+            var memberId = HttpContext.Session.GetString("MemberId");
+            if ( memberId == null || memberId == "")
             {
                 return true;
             }
@@ -48,19 +48,17 @@ namespace GCDGameStore.Controllers
         // GET: Member
         public async Task<IActionResult> Index()
         {
-            if (IsNotLoggedIn())
-            {
-                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
-                return RedirectToAction(nameof(Login));
-            }
-
             if (IsEmployee())
             {
                 return View(await _context.Member.ToListAsync());
             }
 
-            return RedirectToAction(nameof(Details));
+            if (!IsNotLoggedIn())
+            {
+                return RedirectToAction(nameof(Details));
+            }
 
+            return RedirectToAction("Login", "Employee");
         }
 
         public async Task<IActionResult> Library()
@@ -165,8 +163,8 @@ namespace GCDGameStore.Controllers
 
         public IActionResult CreateCreditCard()
         {
-            var newCreditCard = new CreditCard();
-            newCreditCard.MemberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            var newCreditCard = new CreditCard { MemberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId")) };
+
             return View(newCreditCard);
         }
 
@@ -199,6 +197,10 @@ namespace GCDGameStore.Controllers
         // GET: Member/Create
         public IActionResult Create()
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
             return View();
         }
 
@@ -209,6 +211,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,PwHash,Email,Phone,MailingStreetAddress,MailingPostalCode,MailingCity,MailingProvince,ShippingStreetAddress,ShippingPostalCode,ShippingCity,ShippingProvince")] Member member)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (ModelState.IsValid)
             {
                 string password = member.PwHash;
@@ -248,7 +255,16 @@ namespace GCDGameStore.Controllers
 
         public IActionResult Login()
         {
-            return View();
+            if (IsEmployee())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else if (IsNotLoggedIn())
+            {
+                return View();
+            }
+
+            return RedirectToAction(nameof(Details));
         }
 
         // POST: Employee/Login
@@ -258,6 +274,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("Username,PwHash")] Member member)
         {
+            if (IsEmployee())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ModelState.IsValid)
             {
                 var memberCheck = await _context.Member
@@ -281,7 +302,7 @@ namespace GCDGameStore.Controllers
 
                 if (member.PwHash == memberCheck.PwHash)
                 {
-                    HttpContext.Session.SetString("Login", "True");
+                    HttpContext.Session.SetString("Login", "true");
                     HttpContext.Session.SetString("MemberId", memberCheck.MemberId.ToString());
                     return RedirectToAction(nameof(Details), new { id = memberCheck.MemberId });
                 }
@@ -289,6 +310,14 @@ namespace GCDGameStore.Controllers
             }
             member.PwHash = "";
             return View(member);
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.SetString("Login", "false");
+            HttpContext.Session.SetString("MemberId", "");
+
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -349,6 +378,11 @@ namespace GCDGameStore.Controllers
         // GET: Member/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -455,6 +489,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             var member = await _context.Member.FindAsync(id);
             _context.Member.Remove(member);
             await _context.SaveChangesAsync();
