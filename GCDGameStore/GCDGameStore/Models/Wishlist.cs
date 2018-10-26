@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GCDGameStore.Models
 {
@@ -12,6 +13,7 @@ namespace GCDGameStore.Models
         public int WishlistId { get; set; }
 
         [Required]
+        [ForeignKey("Member")]
         public int MemberId { get; set; }
 
         [Required]

@@ -9,6 +9,7 @@ namespace GCDGameStore.Data
     {
         public static void Initialize(GcdGameStoreContext context)
         {
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             if (!context.Employee.Any()) // we need to add employees
@@ -74,7 +75,11 @@ namespace GCDGameStore.Data
                 var members = new Member[]
                 {
                     new Member { Username = "Jalapegnome", PwSalt = "0d3nuW96aA65mhWOwi7RMQ==", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "IdleCyborg", PwSalt = "LxydHI+ySV29m7mnQbvtTQ==", PwHash = "BoW2Aeeb1tSpG82SRdZscpFOdzHr/BNy1dzdIWWPjKw=", Email = "b@b.com", Phone = "111 222-3333" }
+                    new Member { Username = "IdleCyborg", PwSalt = "LxydHI+ySV29m7mnQbvtTQ==", PwHash = "BoW2Aeeb1tSpG82SRdZscpFOdzHr/BNy1dzdIWWPjKw=", Email = "b@b.com", Phone = "111 222-3333" },
+                    new Member { Username = "Pyrogue", PwSalt = "U2GEjIO/M2a1VVrtAUxsZQ==", PwHash = "woH6fq/v9ivvnU5KZoY8H53XaCpkMGAuUZNFunLo5Cc=", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "AdviceBoulder", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "AuthorityLord", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "Sellamander", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" }
                 };
 
                 foreach (Member m in members)
@@ -178,7 +183,44 @@ namespace GCDGameStore.Data
                     }
                     context.SaveChanges();
                 }
+            } // End if (!context.CreditCard.Any())
+
+            if (!context.Friend.Any())
+            {
+                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+                var friends = new Member[]
+                {
+                    context.Member.FirstOrDefault(m => m.Username == "Pyrogue"),
+                    context.Member.FirstOrDefault(m => m.Username == "Sellamander"),
+                    context.Member.FirstOrDefault(m => m.Username == "AdviceBoulder")
+                };
+
+                if (member != null)
+                {
+
+                    
+                    var friendlist = new Friend[]
+                    {
+                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[0].MemberId },
+                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[1].MemberId },
+                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[2].MemberId },
+                        new Friend { MemberId = friends[0].MemberId, FriendMemberId = member.MemberId },
+                        new Friend { MemberId = friends[1].MemberId, FriendMemberId = member.MemberId },
+                        new Friend { MemberId = friends[2].MemberId, FriendMemberId = member.MemberId }
+
+                    };
+
+                    foreach (Friend f in friendlist)
+                    {
+                        context.Friend.Add(f);
+                    }
+                    context.SaveChanges();
+                    
+
+                }
+
             }
-        }
+
+        } // End Initialize()
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.EntityFrameworkCore.Metadata;
 using GCDGameStore.Models;
 
@@ -23,6 +24,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<Library> Library { get; set; }
         public virtual DbSet<Wishlist> Wishlist { get; set; }
         public virtual DbSet<CreditCard> CreditCard { get; set; }
+        public virtual DbSet<Friend> Friend { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,6 +37,20 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Library>().ToTable("Library");
             modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
             modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.Member)
+                .WithMany(m => m.MyFriends)
+                .HasForeignKey(f => f.MemberId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.FriendMember)
+                .WithMany(m => m.FriendsOf)
+                .HasForeignKey(f => f.FriendMemberId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+                
         }
 
     }

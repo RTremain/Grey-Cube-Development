@@ -1,4 +1,4 @@
-﻿@model GCDGameStore.Models.Event
+﻿@model GCDGameStore.Models.Friend
 
 @{
     ViewData["Title"] = "Create";
@@ -6,26 +6,24 @@
 
 <h2>Create</h2>
 
-<h4>Event</h4>
+<h4>Friend</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="FriendId" class="control-label"></label>
+                <select asp-for="FriendId" class ="form-control" asp-items="ViewBag.FriendId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
+                <label asp-for="MemberId" class="control-label"></label>
+                <select asp-for="MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="FriendMemberId" class="control-label"></label>
+                <input asp-for="FriendMemberId" class="form-control" />
+                <span asp-validation-for="FriendMemberId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

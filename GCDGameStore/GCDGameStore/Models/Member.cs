@@ -39,6 +39,19 @@ namespace GCDGameStore.Models
         public string ShippingCity { get; set; }
         public string ShippingProvince { get; set; }
 
+        public virtual ICollection<Friend> MyFriends { get; set; }
+        public virtual ICollection<Friend> FriendsOf { get; set; }
+
     }
-    
+
+    public class Friend
+    {
+        public int FriendId { get; set; }
+
+        public int MemberId { get; set; }
+        public Member Member { get; set; }
+
+        public int FriendMemberId { get; set; }
+        public Member FriendMember { get; set; }
+    }
 }
