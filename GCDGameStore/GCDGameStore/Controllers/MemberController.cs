@@ -268,8 +268,7 @@ namespace GCDGameStore.Controllers
 
                 if (member.PwHash == memberCheck.PwHash)
                 {
-                    HttpContext.Session.SetString("Login", "true");
-                    HttpContext.Session.SetString("MemberId", memberCheck.MemberId.ToString());
+                    _loginStatus.MemberLogin(memberCheck.MemberId.ToString());                    
                     return RedirectToAction(nameof(Details), new { id = memberCheck.MemberId });
                 }
 
@@ -280,9 +279,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.SetString("Login", "false");
-            HttpContext.Session.SetString("MemberId", "");
-
+            _loginStatus.MemberLogout();
             return RedirectToAction("Index", "Home");
         }
 

@@ -82,7 +82,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.SetString("EmployeeLogin", "false");
+            _loginStatus.EmployeeLogout();
 
             return RedirectToAction("Index", "Home");
         }
@@ -121,7 +121,7 @@ namespace GCDGameStore.Controllers
 
                 if (employee.PwHash == employeeCheck.PwHash)
                 {
-                    HttpContext.Session.SetString("EmployeeLogin", "true");
+                    _loginStatus.EmployeeLogin();
                     return RedirectToAction(nameof(LoginSuccess));
                 }
 

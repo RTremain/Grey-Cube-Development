@@ -15,6 +15,35 @@ namespace GCDGameStore.Classes
             _accessor = accessor;
         }
 
+        public bool IsNotLoggedIn()
+        {
+            var httpContext = _accessor.HttpContext;
+            var memberId = httpContext.Session.GetString("MemberId");
+
+            if (memberId == null || memberId == "")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void MemberLogin(string memberId)
+        {
+            var httpContext = _accessor.HttpContext;
+
+            httpContext.Session.SetString("Login", "true");
+            httpContext.Session.SetString("MemberId", memberId);
+        }
+
+        public void MemberLogout()
+        {
+            var httpContext = _accessor.HttpContext;
+
+            httpContext.Session.SetString("Login", "false");
+            httpContext.Session.SetString("MemberId", "");
+        }
+
         public bool IsEmployee()
         {
             var httpContext = _accessor.HttpContext;
@@ -27,17 +56,16 @@ namespace GCDGameStore.Classes
             return false;
         }
 
-        public bool IsNotLoggedIn()
+        public void EmployeeLogin()
         {
             var httpContext = _accessor.HttpContext;
-            var memberId = httpContext.Session.GetString("MemberId");
+            httpContext.Session.SetString("EmployeeLogin", "true");
+        }
 
-            if (memberId == null || memberId == "")
-            {
-                return true;
-            }
-
-            return false;
+        public void EmployeeLogout()
+        {
+            var httpContext = _accessor.HttpContext;
+            httpContext.Session.SetString("EmployeeLogin", "false");
         }
     }
 }
