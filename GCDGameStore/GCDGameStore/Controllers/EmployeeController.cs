@@ -9,32 +9,25 @@ using GCDGameStore.Models;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
     public class EmployeeController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly LoginStatus _loginStatus;
 
-        public EmployeeController(GcdGameStoreContext context)
+        public EmployeeController(GcdGameStoreContext context, IHttpContextAccessor accessor)
         {
             _context = context;
-        }
-
-        private bool IsEmployee()
-        {
-            if (HttpContext.Session.GetString("EmployeeLogin") == "true")
-            {
-                return true;
-            }
-
-            return false;
+            _loginStatus = new LoginStatus(accessor);
         }
 
         // GET: Employee
         public async Task<IActionResult> Index()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -45,7 +38,7 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -68,7 +61,7 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Create
         public IActionResult Create()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -79,7 +72,7 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Login
         public IActionResult Login()
         {
-            if (IsEmployee())
+            if (_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -96,7 +89,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult LoginSuccess()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -123,13 +116,8 @@ namespace GCDGameStore.Controllers
 
                 byte[] salt = Convert.FromBase64String(employee.PwSalt);
 
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: employee.PwHash,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8));
-                employee.PwHash = hashed;
+                // convert plaintext password given to hash
+                employee.PwHash = AccountHashing.GenHash(employee.PwHash, salt);
 
                 if (employee.PwHash == employeeCheck.PwHash)
                 {
@@ -148,7 +136,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,PwHash")] Employee employee)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -156,21 +144,10 @@ namespace GCDGameStore.Controllers
             if (ModelState.IsValid)
             {
                 string password = employee.PwHash;
-                byte[] salt = new byte[128 / 8];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
+                byte[] salt = AccountHashing.GenSalt();
 
-                employee.PwSalt = Convert.ToBase64String(salt);
-
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8));
-                employee.PwHash = hashed;
+                employee.PwSalt = Convert.ToBase64String(salt);                
+                employee.PwHash = AccountHashing.GenHash(password, salt);
 
                 if (ModelState.IsValid)
                 {
@@ -194,7 +171,7 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -219,7 +196,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,Name,PwHash")] Employee employee)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -255,7 +232,7 @@ namespace GCDGameStore.Controllers
         // GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -280,7 +257,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Login));
             }

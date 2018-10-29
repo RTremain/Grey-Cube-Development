@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
@@ -17,43 +18,24 @@ namespace GCDGameStore.Controllers
     {
         private readonly GcdGameStoreContext _context;
         private readonly ILogger _logger;
+        private readonly LoginStatus _loginStatus;
 
-        public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger)
+        public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger, IHttpContextAccessor accessor)
         {
             _context = context;
             _logger = logger;
-        }
-
-        private bool IsNotLoggedIn()
-        {
-            var memberId = HttpContext.Session.GetString("MemberId");
-            if ( memberId == null || memberId == "")
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool IsEmployee()
-        {
-            if (HttpContext.Session.GetString("EmployeeLogin") == "true")
-            {
-                return true;
-            }
-
-            return false;
+            _loginStatus = new LoginStatus(accessor);
         }
 
         // GET: Member
         public async Task<IActionResult> Index()
         {
-            if (IsEmployee())
+            if (_loginStatus.IsEmployee())
             {
                 return View(await _context.Member.ToListAsync());
             }
 
-            if (!IsNotLoggedIn())
+            if (!_loginStatus.IsNotLoggedIn())
             {
                 return RedirectToAction(nameof(Details));
             }
@@ -63,7 +45,7 @@ namespace GCDGameStore.Controllers
 
         public async Task<IActionResult> Library()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -84,7 +66,7 @@ namespace GCDGameStore.Controllers
 
         public async Task<IActionResult> Wishlist()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -105,7 +87,7 @@ namespace GCDGameStore.Controllers
 
         public async Task<IActionResult> CreditCardView()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -143,7 +125,7 @@ namespace GCDGameStore.Controllers
         // GET: Member/Details/5
         public async Task<IActionResult> Details()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -175,7 +157,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCreditCard([Bind("CcNum,ExpMonth,ExpYear,Name,StreetAddress,City,Province,PostalCode")] CreditCard creditCard)
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -197,7 +179,7 @@ namespace GCDGameStore.Controllers
         // GET: Member/Create
         public IActionResult Create()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -211,7 +193,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,PwHash,Email,Phone,MailingStreetAddress,MailingPostalCode,MailingCity,MailingProvince,ShippingStreetAddress,ShippingPostalCode,ShippingCity,ShippingProvince")] Member member)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -219,21 +201,10 @@ namespace GCDGameStore.Controllers
             if (ModelState.IsValid)
             {
                 string password = member.PwHash;
-                byte[] salt = new byte[128 / 8];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
+                byte[] salt = AccountHashing.GenSalt();
 
                 member.PwSalt = Convert.ToBase64String(salt);
-
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8));
-                member.PwHash = hashed;
+                member.PwHash = AccountHashing.GenHash(password, salt);
 
                 if (ModelState.IsValid)
                 {
@@ -255,11 +226,11 @@ namespace GCDGameStore.Controllers
 
         public IActionResult Login()
         {
-            if (IsEmployee())
+            if (_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Index));
             }
-            else if (IsNotLoggedIn())
+            else if (_loginStatus.IsNotLoggedIn())
             {
                 return View();
             }
@@ -274,7 +245,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("Username,PwHash")] Member member)
         {
-            if (IsEmployee())
+            if (_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -292,13 +263,8 @@ namespace GCDGameStore.Controllers
 
                 byte[] salt = Convert.FromBase64String(member.PwSalt);
 
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: member.PwHash,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8));
-                member.PwHash = hashed;
+                // convert plaintext password into hash for comparison
+                member.PwHash = AccountHashing.GenHash(member.PwHash, salt);
 
                 if (member.PwHash == memberCheck.PwHash)
                 {
@@ -324,7 +290,7 @@ namespace GCDGameStore.Controllers
         // GET: Member/Edit/5
         public async Task<IActionResult> Edit()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -378,7 +344,7 @@ namespace GCDGameStore.Controllers
         // GET: Member/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -400,7 +366,7 @@ namespace GCDGameStore.Controllers
 
         public async Task<IActionResult> DeleteWishlistItem(int? id)
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -437,7 +403,7 @@ namespace GCDGameStore.Controllers
                 return NotFound();
             }
 
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction(nameof(Login));
@@ -489,7 +455,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }

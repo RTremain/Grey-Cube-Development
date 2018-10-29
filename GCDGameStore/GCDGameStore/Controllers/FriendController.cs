@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
@@ -15,28 +16,21 @@ namespace GCDGameStore.Controllers
     {
         private readonly GcdGameStoreContext _context;
         private readonly ILogger _logger;
+        private readonly LoginStatus _loginStatus;
 
-        public FriendController(GcdGameStoreContext context, ILogger<FriendController> logger)
+        public FriendController(GcdGameStoreContext context, ILogger<FriendController> logger, IHttpContextAccessor accessor)
         {
             _context = context;
             _logger = logger;
+            _loginStatus = new LoginStatus(accessor);
         }
 
-        private bool IsNotLoggedIn()
-        {
-            var memberId = HttpContext.Session.GetString("MemberId");
-            if (memberId == null || memberId == "")
-            {
-                return true;
-            }
-
-            return false;
-        }
+        
 
         // GET: Friend
         public async Task<IActionResult> Index()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction("Login", "Member");
@@ -55,7 +49,7 @@ namespace GCDGameStore.Controllers
         // GET: Friend/Create
         public IActionResult Create()
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction("Login", "Member");
@@ -71,7 +65,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(String username)
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction("Login", "Member");
@@ -120,7 +114,7 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string friendId)
         {
-            if (IsNotLoggedIn())
+            if (_loginStatus.IsNotLoggedIn())
             {
                 _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
                 return RedirectToAction("Login", "Member");

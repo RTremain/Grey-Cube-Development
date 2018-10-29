@@ -6,31 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
 using Microsoft.AspNetCore.Http;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
     public class ReportController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly LoginStatus _loginStatus;
 
-        public ReportController(GcdGameStoreContext context)
+        public ReportController(GcdGameStoreContext context, IHttpContextAccessor accessor)
         {
             _context = context;
+            _loginStatus = new LoginStatus(accessor);
         }
 
-        private bool IsEmployee()
-        {
-            if (HttpContext.Session.GetString("EmployeeLogin") == "true")
-            {
-                return true;
-            }
-
-            return false;
-        }
+        
 
         public IActionResult Index()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -40,7 +35,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult GameList()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -50,7 +45,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult GameDetail()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -60,7 +55,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult MemberList()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -70,7 +65,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult MemberDetail()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -80,7 +75,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult WishList()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
@@ -90,7 +85,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult Sales()
         {
-            if (!IsEmployee())
+            if (!_loginStatus.IsEmployee())
             {
                 return RedirectToAction("Login", "Employee");
             }
