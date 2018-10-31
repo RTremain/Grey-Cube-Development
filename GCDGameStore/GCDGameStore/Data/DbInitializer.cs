@@ -16,8 +16,8 @@ namespace GCDGameStore.Data
             {
                 var employees = new Employee[]
                 {
-                    new Employee{Name="Mike", PwHash="gn16/Lx7NN0YVhdmYy83AAdKs8kEL760FJv69wd3C4c=", PwSalt="yfQLySCG0lSsaN3hXZ1JWQ==" },
-                    new Employee{Name="Steve", PwHash="zmzrqTW3ITuGFK37hW9PSCMauTL85r8stxt9dFOiVdA=", PwSalt="VI9QMNvV3sSdtcxCcxzXAQ==" }
+                    new Employee{Name="Mike", PwHash="qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", PwSalt="yfQLySCG0lSsaN3hXZ1JWQ==" },
+                    new Employee{Name="Steve", PwHash="qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", PwSalt="VI9QMNvV3sSdtcxCcxzXAQ==" }
                 };
 
                 foreach (Employee e in employees)
@@ -75,11 +75,11 @@ namespace GCDGameStore.Data
                 var members = new Member[]
                 {
                     new Member { Username = "Jalapegnome", PwSalt = "0d3nuW96aA65mhWOwi7RMQ==", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "IdleCyborg", PwSalt = "LxydHI+ySV29m7mnQbvtTQ==", PwHash = "BoW2Aeeb1tSpG82SRdZscpFOdzHr/BNy1dzdIWWPjKw=", Email = "b@b.com", Phone = "111 222-3333" },
-                    new Member { Username = "Pyrogue", PwSalt = "U2GEjIO/M2a1VVrtAUxsZQ==", PwHash = "woH6fq/v9ivvnU5KZoY8H53XaCpkMGAuUZNFunLo5Cc=", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "AdviceBoulder", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "AuthorityLord", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" },
-                    new Member { Username = "Sellamander", PwSalt = "", PwHash = "password", Email = "a@a.com", Phone = "123 456-7890" }
+                    new Member { Username = "IdleCyborg", PwSalt = "LxydHI+ySV29m7mnQbvtTQ==", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "b@b.com", Phone = "111 222-3333" },
+                    new Member { Username = "Pyrogue", PwSalt = "U2GEjIO/M2a1VVrtAUxsZQ==", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "AdviceBoulder", PwSalt = "", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "AuthorityLord", PwSalt = "", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" },
+                    new Member { Username = "Sellamander", PwSalt = "", PwHash = "qV3GGAd6GWI/nR1D6MwV6S60qVWE6mEAfYCyhO02J20=", Email = "a@a.com", Phone = "123 456-7890" }
                 };
 
                 foreach (Member m in members)
