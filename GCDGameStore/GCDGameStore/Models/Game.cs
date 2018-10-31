@@ -6,7 +6,7 @@ namespace GCDGameStore.Models
 {
     public class Game
     {
-        public int GameID { get; set; }
+        public int GameId { get; set; }
 
         [Required]
         public string Title { get; set; }

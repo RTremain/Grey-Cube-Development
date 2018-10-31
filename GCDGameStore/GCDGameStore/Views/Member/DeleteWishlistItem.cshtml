@@ -1,0 +1,34 @@
+﻿@model GCDGameStore.Models.Wishlist
+
+@{
+    ViewData["Title"] = "DeleteWishlistItem";
+    Layout = "_MemberLayout";
+}
+
+<h2>DeleteWishlistItem</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Wishlist</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MemberId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Game)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Game.Title)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteWishlistItem">
+        <input type="hidden" asp-for="WishlistId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Wishlist">Back to List</a>
+    </form>
+</div>

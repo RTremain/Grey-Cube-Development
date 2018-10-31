@@ -6,34 +6,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
+using Microsoft.AspNetCore.Http;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
     public class GameController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly LoginStatus _loginStatus;
 
-        public GameController(GcdGameStoreContext context)
+        public GameController(GcdGameStoreContext context, IHttpContextAccessor accessor)
         {
             _context = context;
+            _loginStatus = new LoginStatus(accessor);
         }
 
         // GET: Game
         public async Task<IActionResult> Index()
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             return View(await _context.Game.ToListAsync());
         }
 
         // GET: Game/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.GameID == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
                 return NotFound();
@@ -45,6 +59,11 @@ namespace GCDGameStore.Controllers
         // GET: Game/Create
         public IActionResult Create()
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             return View();
         }
 
@@ -55,6 +74,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GameID,Title,ReleaseDate")] Game game)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(game);
@@ -67,6 +91,11 @@ namespace GCDGameStore.Controllers
         // GET: Game/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -87,7 +116,12 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GameID,Title,ReleaseDate")] Game game)
         {
-            if (id != game.GameID)
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
+            if (id != game.GameId)
             {
                 return NotFound();
             }
@@ -101,7 +135,7 @@ namespace GCDGameStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameExists(game.GameID))
+                    if (!GameExists(game.GameId))
                     {
                         return NotFound();
                     }
@@ -118,13 +152,18 @@ namespace GCDGameStore.Controllers
         // GET: Game/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var game = await _context.Game
-                .FirstOrDefaultAsync(m => m.GameID == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
                 return NotFound();
@@ -138,6 +177,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             var game = await _context.Game.FindAsync(id);
             _context.Game.Remove(game);
             await _context.SaveChangesAsync();
@@ -146,7 +190,7 @@ namespace GCDGameStore.Controllers
 
         private bool GameExists(int id)
         {
-            return _context.Game.Any(e => e.GameID == id);
+            return _context.Game.Any(e => e.GameId == id);
         }
     }
 }

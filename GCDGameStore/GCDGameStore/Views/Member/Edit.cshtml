@@ -1,0 +1,95 @@
+﻿@model GCDGameStore.Models.Member
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_MemberLayout";
+}
+
+<h2>Edit</h2>
+
+<h4>Member</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MemberId" />
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PwHash" class="control-label"></label>
+                <input asp-for="PwHash" class="form-control" />
+                <span asp-validation-for="PwHash" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PwSalt" class="control-label"></label>
+                <input asp-for="PwSalt" class="form-control" />
+                <span asp-validation-for="PwSalt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailingStreetAddress" class="control-label"></label>
+                <input asp-for="MailingStreetAddress" class="form-control" />
+                <span asp-validation-for="MailingStreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailingPostalCode" class="control-label"></label>
+                <input asp-for="MailingPostalCode" class="form-control" />
+                <span asp-validation-for="MailingPostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailingCity" class="control-label"></label>
+                <input asp-for="MailingCity" class="form-control" />
+                <span asp-validation-for="MailingCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MailingProvince" class="control-label"></label>
+                <input asp-for="MailingProvince" class="form-control" />
+                <span asp-validation-for="MailingProvince" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingStreetAddress" class="control-label"></label>
+                <input asp-for="ShippingStreetAddress" class="form-control" />
+                <span asp-validation-for="ShippingStreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingPostalCode" class="control-label"></label>
+                <input asp-for="ShippingPostalCode" class="form-control" />
+                <span asp-validation-for="ShippingPostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingCity" class="control-label"></label>
+                <input asp-for="ShippingCity" class="form-control" />
+                <span asp-validation-for="ShippingCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingProvince" class="control-label"></label>
+                <input asp-for="ShippingProvince" class="form-control" />
+                <span asp-validation-for="ShippingProvince" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

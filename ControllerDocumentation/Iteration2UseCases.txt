@@ -1,0 +1,38 @@
+
+GCD - Iteration Phase 2 
+
+
+Use Cases
+
+
+
+16 View profile - Done
+19 Edit profile
+20 Edit mailing address
+21 Edit shipping address
+
+22 Add credit card - Done
+23 Delete credit card - Done
+
+28 View friends - Done
+29 Add friend - Done
+30 Delete friend - Done
+
+25 View game details
+
+38 Download game
+26 Add to wish list
+27 Remove game from wish list - Done
+32 Rate game
+33 Add game review
+
+39 Register for event
+
+
+
+
+
+Employee Login - Done
+Employee Logout - Done
+Member Login - Done
+Member Logout - Done

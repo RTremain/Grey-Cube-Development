@@ -1,0 +1,41 @@
+﻿@model IEnumerable<GCDGameStore.Models.Wishlist>
+
+@{
+    ViewData["Title"] = "Wishlist";
+    Layout = "_MemberLayout";
+}
+
+<h2>Wishlist</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Game.Title)
+            </td>
+            <td>
+                <a asp-action="GameDetails" asp-route-id="@item.GameId">Store Page</a> |
+                <a asp-action="DeleteWishlistItem" asp-route-id="@item.WishlistId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

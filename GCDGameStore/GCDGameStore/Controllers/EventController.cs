@@ -6,27 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
+using Microsoft.AspNetCore.Http;
+using GCDGameStore.Classes;
 
 namespace GCDGameStore.Controllers
 {
     public class EventController : Controller
     {
         private readonly GcdGameStoreContext _context;
+        private readonly LoginStatus _loginStatus;
 
-        public EventController(GcdGameStoreContext context)
+        public EventController(GcdGameStoreContext context, IHttpContextAccessor accessor)
         {
             _context = context;
+            _loginStatus = new LoginStatus(accessor);
         }
 
         // GET: Event
         public async Task<IActionResult> Index()
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             return View(await _context.Event.ToListAsync());
         }
 
         // GET: Event/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -45,6 +59,11 @@ namespace GCDGameStore.Controllers
         // GET: Event/Create
         public IActionResult Create()
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             return View();
         }
 
@@ -55,6 +74,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventId,Title,EventDate,Description")] Event @event)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(@event);
@@ -67,6 +91,11 @@ namespace GCDGameStore.Controllers
         // GET: Event/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -87,6 +116,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,EventDate,Description")] Event @event)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id != @event.EventId)
             {
                 return NotFound();
@@ -118,6 +152,11 @@ namespace GCDGameStore.Controllers
         // GET: Event/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -138,6 +177,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!_loginStatus.IsEmployee())
+            {
+                return RedirectToAction("Login", "Employee");
+            }
+
             var @event = await _context.Event.FindAsync(id);
             _context.Event.Remove(@event);
             await _context.SaveChangesAsync();

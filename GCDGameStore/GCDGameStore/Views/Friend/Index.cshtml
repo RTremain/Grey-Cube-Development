@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GCDGameStore.Models.Friend>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_MemberLayout";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Add New Friend</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FriendMember.Username)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FriendMember.Username)
+            </td>
+            <td>
+                <form asp-action="Delete">
+                    <button type="submit" name="friendId" value="@item.FriendMember.MemberId">Delete Friend</button>
+                </form>
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

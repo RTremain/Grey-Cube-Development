@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GCDGameStore.Models.CreditCard>
+
+@{
+    ViewData["Title"] = "CreditCardView";
+    Layout = "_MemberLayout";
+}
+
+<h2>CreditCardView</h2>
+
+<p>
+    <a asp-action="CreateCreditCard">Add New Credit Card</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CcNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpMonth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StreetAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Province)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CcNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StreetAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Province)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostalCode)
+            </td>
+            <td>
+                <a asp-action="DeleteCreditCard" asp-route-id="@item.CreditCardId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
