@@ -87,7 +87,7 @@ namespace GCDGameStore.Data
                     {
                         var libraryGames = new Library[]
                         {
-                            new Library { MemberId=  memberId.MemberId, GameId = gameList[0].GameId },
+                            new Library { MemberId = memberId.MemberId, GameId = gameList[0].GameId },
                             new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
                         };
 
@@ -212,6 +212,9 @@ namespace GCDGameStore.Data
                 var events = new Event[]
                 {
                     new Event { Title = "Tabletop night", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "Boardgames all night" },
+                    new Event { Title = "LAN Night", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "LAN gaming night" },
+                    new Event { Title = "Blackjack", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "Playing black jack" },
+                    new Event { Title = "Illegal gambling night", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "Don't tell the feds" },
                     new Event { Title = "Indie Feature Night",EventDate = new DateTime(2018, 8, 9, 18, 0, 0), Description = "All indie titles 50% off" }
                 };
 

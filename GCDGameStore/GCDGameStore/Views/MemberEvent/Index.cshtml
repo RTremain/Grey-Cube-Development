@@ -1,7 +1,8 @@
-﻿@model IEnumerable<GCDGameStore.Models.Event>
+﻿@model IEnumerable<GCDGameStore.ViewModels.AttendingEvent>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
 }
 
 <h2>Index</h2>
@@ -21,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registered)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -37,9 +41,12 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                @Html.DisplayFor(modelItem => item.Registered)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AttendingEventId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AttendingEventId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AttendingEventId">Delete</a>
             </td>
         </tr>
 }

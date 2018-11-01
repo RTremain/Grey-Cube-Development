@@ -7,7 +7,7 @@ namespace GCDGameStore.ViewModels
 {
     public class AttendingEvent
     {
-        public int EventId { get; set; }
+        public int AttendingEventId { get; set; }
 
         public string Title { get; set; }
 
@@ -15,6 +15,6 @@ namespace GCDGameStore.ViewModels
 
         public string Description { get; set; }
 
-        public virtual ICollection<Attendance> Attendees { get; set; }
+        public bool Registered { get; set; }
     }
 }

@@ -35,8 +35,37 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
+            var eventList = await _context.Event.ToListAsync();
+            var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
 
-            return View(await _context.Event.ToListAsync());
+            var attendanceList = await _context.Attendance
+                .Where(a => a.MemberId == memberId)
+                .Include(a => a.Event)
+                .ToListAsync();
+
+            var viewModelList = new List<AttendingEvent>();
+
+            foreach (Event e in eventList)
+            {
+                var newEvent = new AttendingEvent
+                {
+                    AttendingEventId = e.EventId,
+                    Title = e.Title,
+                    EventDate = e.EventDate,
+                    Description = e.Description,
+                    Registered = false
+                };
+
+                var result = attendanceList.Find(a => a.EventId == e.EventId);
+                if (result != null)
+                {
+                    newEvent.Registered = true;
+                }
+
+                viewModelList.Add(newEvent);
+            }
+
+            return View(viewModelList);
         }
 
         // GET: MemberEvent/Details/5

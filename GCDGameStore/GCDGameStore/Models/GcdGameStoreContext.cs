@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Microsoft.EntityFrameworkCore.Metadata;
 using GCDGameStore.Models;
+using GCDGameStore.ViewModels;
 
 namespace GCDGameStore.Models
 {
@@ -38,7 +39,12 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Library>().ToTable("Library");
             modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
             modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
-            modelBuilder.Entity<Attendance>().ToTable("Attendance");
+
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Event)
+                .WithMany(e => e.Attendees)
+                .HasForeignKey(a => a.EventId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Friend>()
                 .HasOne(f => f.Member)
@@ -54,6 +60,9 @@ namespace GCDGameStore.Models
 
             
         }
+
+
+        public DbSet<GCDGameStore.ViewModels.AttendingEvent> AttendingEvent { get; set; }
 
     }
 }
