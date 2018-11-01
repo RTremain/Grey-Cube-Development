@@ -47,14 +47,7 @@ namespace GCDGameStore.Controllers
 
             foreach (Event e in eventList)
             {
-                var newEvent = new AttendingEvent
-                {
-                    AttendingEventId = e.EventId,
-                    Title = e.Title,
-                    EventDate = e.EventDate,
-                    Description = e.Description,
-                    Registered = false
-                };
+                var newEvent = new AttendingEvent(e);
 
                 var result = attendanceList.Find(a => a.EventId == e.EventId);
                 if (result != null)
