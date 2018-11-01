@@ -52,22 +52,7 @@ namespace GCDGameStore.Data
                 context.SaveChanges();
             }
 
-            if (!context.Event.Any()) // we need to add events
-            {
-
-                var events = new Event[]
-                {
-                    new Event { Title = "Tabletop night", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "Boardgames all night" },
-                    new Event { Title = "Indie Feature Night",EventDate = new DateTime(2018, 8, 9, 18, 0, 0), Description = "All indie titles 50% off" }
-                };
-
-                foreach (Event e in events)
-                {
-                    context.Event.Add(e);
-                }
-
-                context.SaveChanges();
-            }
+            
 
             if (!context.Member.Any()) // we need to add members
             {
@@ -216,6 +201,49 @@ namespace GCDGameStore.Data
                     }
                     context.SaveChanges();
                     
+
+                }
+
+            }
+
+            if (!context.Event.Any()) // we need to add events
+            {
+
+                var events = new Event[]
+                {
+                    new Event { Title = "Tabletop night", EventDate = new DateTime(2016, 5, 13, 19, 30, 0), Description = "Boardgames all night" },
+                    new Event { Title = "Indie Feature Night",EventDate = new DateTime(2018, 8, 9, 18, 0, 0), Description = "All indie titles 50% off" }
+                };
+
+                foreach (Event e in events)
+                {
+                    context.Event.Add(e);
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.Attendance.Any())
+            {
+                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+                if (memberId != null)
+                {
+                    var eventList = context.Event.ToList();
+
+                    if (eventList.Count >= 2)
+                    {
+                        var attendanceList = new Attendance[]
+                        {
+                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[0].EventId },
+                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[1].EventId }
+                        };
+
+                        foreach (Attendance a in attendanceList)
+                        {
+                            context.Attendance.Add(a);
+                        }
+                        context.SaveChanges();
+                    }
 
                 }
 

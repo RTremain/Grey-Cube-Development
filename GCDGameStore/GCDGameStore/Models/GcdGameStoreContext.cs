@@ -25,6 +25,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<Wishlist> Wishlist { get; set; }
         public virtual DbSet<CreditCard> CreditCard { get; set; }
         public virtual DbSet<Friend> Friend { get; set; }
+        public virtual DbSet<Attendance> Attendance { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +38,7 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Library>().ToTable("Library");
             modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
             modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
+            modelBuilder.Entity<Attendance>().ToTable("Attendance");
 
             modelBuilder.Entity<Friend>()
                 .HasOne(f => f.Member)
@@ -49,8 +51,8 @@ namespace GCDGameStore.Models
                 .WithMany(m => m.FriendsOf)
                 .HasForeignKey(f => f.FriendMemberId)
                 .OnDelete(DeleteBehavior.Restrict);
-                
-                
+
+            
         }
 
     }
