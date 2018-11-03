@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GCDGameStore.Models.Library>
+﻿@model IEnumerable<GCDGameStore.ViewModels.MemberLibrary>
 
 @{
     ViewData["Title"] = "Library";
@@ -17,6 +17,7 @@
                 @Html.DisplayNameFor(model => model.Game)
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,16 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Game.Title)
+            </td>
+            <td>
+                @if (item.HasReview)
+                {
+                    <a asp-controller="Review" asp-action="Details" asp-route-id="@item.ReviewId">View Review</a>
+                }
+                else
+                {
+                    <a asp-controller="Review" asp-action="Create" asp-route-id="@item.GameId">Create Review</a>
+                }
             </td>
             <td>
                 <a asp-controller="MemberGame" asp-action="Details" asp-route-id="@item.GameId">Store Page</a>

@@ -1,0 +1,42 @@
+﻿@model GCDGameStore.Models.Review
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Review</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Game)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Game.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Recommended)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Recommended)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReviewText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReviewText)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Approved)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Approved)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="Member" asp-action="Library">Back to Library</a>
+</div>

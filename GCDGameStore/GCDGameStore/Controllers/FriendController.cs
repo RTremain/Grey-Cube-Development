@@ -73,7 +73,7 @@ namespace GCDGameStore.Controllers
 
             _logger.LogInformation("Received username: {Message}", username);
             var friend = await _context.Member.Where(m => m.Username == username).SingleOrDefaultAsync();
-            var memberId = HttpContext.Session.GetString("MemberId");
+            var memberId = _loginStatus.GetMemberId();
 
             HttpContext.Session.SetString("Error", "");
 
@@ -83,7 +83,7 @@ namespace GCDGameStore.Controllers
                 return View();
             }
 
-            var friendship = await _context.Friend.Where(f => f.MemberId == Convert.ToInt32(memberId)).Where(f => f.FriendMemberId == friend.MemberId).SingleOrDefaultAsync();
+            var friendship = await _context.Friend.Where(f => f.MemberId == memberId).Where(f => f.FriendMemberId == friend.MemberId).SingleOrDefaultAsync();
 
             if (friendship != null)
             {
@@ -91,8 +91,8 @@ namespace GCDGameStore.Controllers
                 return View();
             }
 
-            var newFriendship1 = new Friend { MemberId = Convert.ToInt32(memberId), FriendMemberId = friend.MemberId };
-            var newFriendship2 = new Friend { MemberId = friend.MemberId, FriendMemberId = Convert.ToInt32(memberId) };
+            var newFriendship1 = new Friend { MemberId = memberId, FriendMemberId = friend.MemberId };
+            var newFriendship2 = new Friend { MemberId = friend.MemberId, FriendMemberId = memberId };
 
             try
             {

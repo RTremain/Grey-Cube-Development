@@ -27,6 +27,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<CreditCard> CreditCard { get; set; }
         public virtual DbSet<Friend> Friend { get; set; }
         public virtual DbSet<Attendance> Attendance { get; set; }
+        public DbSet<Review> Review { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,9 +64,8 @@ namespace GCDGameStore.Models
 
 
         public DbSet<GCDGameStore.ViewModels.AttendingEvent> AttendingEvent { get; set; }
-
-
         public DbSet<GCDGameStore.ViewModels.MemberGameDetail> MemberGameDetail { get; set; }
+        public DbSet<GCDGameStore.ViewModels.UserLogin> UserLogin { get; set; }
 
     }
 }

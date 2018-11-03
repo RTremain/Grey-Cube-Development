@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCDGameStore.Models;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using GCDGameStore.Classes;
+using GCDGameStore.ViewModels;
 
 namespace GCDGameStore.Controllers
 {
@@ -101,32 +100,49 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("Name,PwHash")] Employee employee)
+        public async Task<IActionResult> Login([Bind("Username,Password")] UserLogin user)
         {
+            if (_loginStatus.IsEmployee())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            HttpContext.Session.SetString("Error", "");
+
             if (ModelState.IsValid)
             {
-                var employeeCheck = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Name == employee.Name);
-                if (employee == null)
+                if (user == null)
                 {
-                    return NotFound();
+                    HttpContext.Session.SetString("Error", "Invalid username or password.");
+                    return View();
                 }
 
-                employee.PwSalt = employeeCheck.PwSalt;
+                var employeeCheck = await _context.Employee
+                    .FirstOrDefaultAsync(m => m.Name == user.Username);
 
-                byte[] salt = Convert.FromBase64String(employee.PwSalt);
+                if (employeeCheck == null)
+                {
+                    HttpContext.Session.SetString("Error", "Invalid username or password.");
+                    user.Password = "";
+                    return View(user);
+                }
+
+
+                byte[] salt = Convert.FromBase64String(employeeCheck.PwSalt);
 
                 // convert plaintext password given to hash
-                employee.PwHash = AccountHashing.GenHash(employee.PwHash, salt);
+                var testHash = AccountHashing.GenHash(user.Password, salt);
 
-                if (employee.PwHash == employeeCheck.PwHash)
+                if (testHash == employeeCheck.PwHash)
                 {
                     _loginStatus.EmployeeLogin();
                     return RedirectToAction(nameof(LoginSuccess));
                 }
+                HttpContext.Session.SetString("Error", "Invalid username or password.");
 
             }
-            return View(employee);
+            user.Password = "";
+            return View(user);
         }
 
         // POST: Employee/Create

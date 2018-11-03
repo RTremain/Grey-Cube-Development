@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using GCDGameStore.Classes;
+using GCDGameStore.ViewModels;
+using System.Collections;
 
 namespace GCDGameStore.Controllers
 {
@@ -51,17 +53,45 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = _loginStatus.GetMemberId();
+            int memberId = _loginStatus.GetMemberId();
             
-            var library = await _context.Library.Include(a => a.Game)
-                .Where(m => m.MemberId == id).ToListAsync();
+            var libraryList = await _context.Library.Include(a => a.Game)
+                .Where(m => m.MemberId == memberId).ToListAsync();
 
-            if (library == null)
+            if (libraryList == null)
             {
                 return NotFound();
             }
 
-            return View(library);
+            var memberLibrary = new List<MemberLibrary>();
+
+            // get all reviews from user and place ids in dictionary
+            Dictionary<int, int> reviewLookup = new Dictionary<int, int>();
+            var memberReviews = await _context.Review.Where(r => r.MemberId == memberId).ToListAsync();
+
+            foreach (Review r in memberReviews)
+            {
+                reviewLookup.Add(r.GameId, r.ReviewId);
+            }
+
+            foreach (Library l in libraryList)
+            {
+                var memberLibraryItem = new MemberLibrary(l);
+
+                if (reviewLookup.ContainsKey(l.GameId))
+                {
+                    memberLibraryItem.ReviewId = reviewLookup[l.GameId];
+                    memberLibraryItem.HasReview = true;
+                }
+                else
+                {
+                    memberLibraryItem.HasReview = false;
+                }
+
+                memberLibrary.Add(memberLibraryItem);
+            }
+
+            return View(memberLibrary);
         }
 
         public async Task<IActionResult> Wishlist()
@@ -236,6 +266,7 @@ namespace GCDGameStore.Controllers
             }
             else if (_loginStatus.IsNotLoggedIn())
             {
+                HttpContext.Session.SetString("Error", "");
                 return View();
             }
 
@@ -247,38 +278,48 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("Username,PwHash")] Member member)
+        public async Task<IActionResult> Login([Bind("Username,Password")] UserLogin user)
         {
             if (_loginStatus.IsEmployee())
             {
                 return RedirectToAction(nameof(Index));
             }
 
+            HttpContext.Session.SetString("Error", "");
+
             if (ModelState.IsValid)
             {
-                var memberCheck = await _context.Member
-                .FirstOrDefaultAsync(m => m.Username == member.Username);
-                if (member == null)
+                if (user == null)
                 {
-                    return NotFound();
+                    HttpContext.Session.SetString("Error", "Invalid username or password.");
+                    return View();
                 }
 
-                member.PwSalt = memberCheck.PwSalt;
+                var memberCheck = await _context.Member
+                    .FirstOrDefaultAsync(m => m.Username == user.Username);
 
-                byte[] salt = Convert.FromBase64String(member.PwSalt);
+                if (memberCheck == null)
+                {
+                    HttpContext.Session.SetString("Error", "Invalid username or password.");
+                    user.Password = "";
+                    return View(user);
+                }
+
+                byte[] salt = Convert.FromBase64String(memberCheck.PwSalt);
 
                 // convert plaintext password into hash for comparison
-                member.PwHash = AccountHashing.GenHash(member.PwHash, salt);
+                var testHash = AccountHashing.GenHash(user.Password, salt);
 
-                if (member.PwHash == memberCheck.PwHash)
+                if (testHash == memberCheck.PwHash)
                 {
                     _loginStatus.MemberLogin(memberCheck.MemberId.ToString());                    
                     return RedirectToAction(nameof(Details), new { id = memberCheck.MemberId });
                 }
+                HttpContext.Session.SetString("Error", "Invalid username or password.");
 
             }
-            member.PwHash = "";
-            return View(member);
+            user.Password = "";
+            return View(user);
         }
 
         public IActionResult Logout()

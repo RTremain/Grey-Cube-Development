@@ -24,7 +24,7 @@ Use Cases
 26 Add to wish list - Done
 27 Remove game from wish list - Done
 32 Rate game
-33 Add game review
+33 Add game review - Done
 
 39 Register for event
 
@@ -40,6 +40,3 @@ Add Free Game to Library - Done
 
 
 
-Mitch reminders:
-- Log 1 hour for Wednesday
-- Log 2.5 hours for Friday

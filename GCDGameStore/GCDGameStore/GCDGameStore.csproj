@@ -18,9 +18,6 @@
     <Content Update="Views\Employee\Login.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Member\Login.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Views\Report\GameList.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
