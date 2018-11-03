@@ -19,9 +19,9 @@ Use Cases
 30 Delete friend - Done
 
 25 View game details
-
-38 Download game
-26 Add to wish list
+ - Done
+38 Download game - Done
+26 Add to wish list - Done
 27 Remove game from wish list - Done
 32 Rate game
 33 Add game review
@@ -30,9 +30,16 @@ Use Cases
 
 
 
-
+ - Done
 
 Employee Login - Done
 Employee Logout - Done
 Member Login - Done
 Member Logout - Done
+Add Free Game to Library - Done
+
+
+
+Mitch reminders:
+- Log 1 hour for Wednesday
+- Log 2.5 hours for Friday

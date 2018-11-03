@@ -1,0 +1,73 @@
+﻿@model GCDGameStore.ViewModels.MemberGameDetail
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>View</h2>
+
+<div>
+    <h4>MemberGameDetail</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReleaseDate)
+        </dd>
+    </dl>
+    @if (Model.InLibrary)
+    {
+        <a asp-controller="MemberGame" asp-action="Download">Download Game</a>
+    }
+    else
+    {
+        <form asp-action="CreateLibraryItem">
+            <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Library</button>
+        </form>
+        @if (Model.OnWishlist)
+        {
+            <form asp-action="DeleteWishlistItem">
+                <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Remove From Wishlist</button>
+            </form>
+        }
+        else
+        {
+            <form asp-action="CreateWishlistItem">
+                <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Wishlist</button>
+            </form>
+        }
+    }
+
+
+
+    @if (Model.HasRating)
+    {
+
+    }
+    else
+    {
+
+    }
+
+    @if (Model.HasReview)
+    {
+
+    }
+    else
+    {
+
+    }
+
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

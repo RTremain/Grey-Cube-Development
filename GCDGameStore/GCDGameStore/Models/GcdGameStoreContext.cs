@@ -64,5 +64,8 @@ namespace GCDGameStore.Models
 
         public DbSet<GCDGameStore.ViewModels.AttendingEvent> AttendingEvent { get; set; }
 
+
+        public DbSet<GCDGameStore.ViewModels.MemberGameDetail> MemberGameDetail { get; set; }
+
     }
 }

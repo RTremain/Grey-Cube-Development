@@ -51,7 +51,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
             
             var library = await _context.Library.Include(a => a.Game)
                 .Where(m => m.MemberId == id).ToListAsync();
@@ -72,7 +72,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
 
             var wishlist = await _context.Wishlist.Include(a => a.Game)
                 .Where(m => m.MemberId == id).ToListAsync();
@@ -93,7 +93,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
 
             var creditCards = await _context.CreditCard
                 .Where(c => c.MemberId == id).ToListAsync();
@@ -105,7 +105,11 @@ namespace GCDGameStore.Controllers
         // GET: Member/Details/5
         public async Task<IActionResult> GameDetails(int? id)
         {
-            // TODO: If member is not logged in, redirect to visitor store page for game
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
 
             if (id == null)
             {
@@ -131,7 +135,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
 
             var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.MemberId == id);
@@ -145,7 +149,7 @@ namespace GCDGameStore.Controllers
 
         public IActionResult CreateCreditCard()
         {
-            var newCreditCard = new CreditCard { MemberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId")) };
+            var newCreditCard = new CreditCard { MemberId = _loginStatus.GetMemberId() };
 
             return View(newCreditCard);
         }
@@ -163,7 +167,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
 
             if (ModelState.IsValid)
             {
@@ -293,7 +297,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int id = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int id = _loginStatus.GetMemberId();
 
             var member = await _context.Member.FindAsync(id);
             if (member == null)
@@ -361,38 +365,6 @@ namespace GCDGameStore.Controllers
             return View(member);
         }
 
-        public async Task<IActionResult> DeleteWishlistItem(int? id)
-        {
-            if (_loginStatus.IsNotLoggedIn())
-            {
-                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
-                return RedirectToAction(nameof(Login));
-            }
-
-            int memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wishlist = await _context.Wishlist
-                .Include(w => w.Game)
-                .FirstOrDefaultAsync(w => w.WishlistId == id);
-
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
-            else if (wishlist.MemberId != memberId)
-            {
-                return BadRequest();
-            }
-            
-
-            return View(wishlist);
-        }
-
         public async Task<IActionResult> DeleteCreditCard(int? id)
         {
             if (id == null)
@@ -406,7 +378,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            int memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            int memberId = _loginStatus.GetMemberId();
 
             var creditCard = await _context.CreditCard
                 .FirstOrDefaultAsync(w => w.CreditCardId == id);

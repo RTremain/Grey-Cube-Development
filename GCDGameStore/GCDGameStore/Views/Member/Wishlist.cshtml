@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MemberId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Game)
             </th>
             <th></th>
@@ -26,14 +23,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberId)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Game.Title)
             </td>
             <td>
-                <a asp-action="GameDetails" asp-route-id="@item.GameId">Store Page</a> |
-                <a asp-action="DeleteWishlistItem" asp-route-id="@item.WishlistId">Delete</a>
+                <a asp-controller="MemberGame" asp-action="Details" asp-route-id="@item.GameId">Store Page</a>
             </td>
         </tr>
 }

@@ -44,6 +44,23 @@ namespace GCDGameStore.Classes
             httpContext.Session.SetString("MemberId", "");
         }
 
+        /// <summary>
+        ///     Returns an int of the memberId, if session value is null or empty, returns -1 instead.
+        /// </summary>
+        /// <returns></returns>
+        public int GetMemberId()
+        {
+            var httpContext = _accessor.HttpContext;
+            var memberId = httpContext.Session.GetString("MemberId");
+
+            if (memberId != null && memberId != "")
+            {
+                return Convert.ToInt32(memberId);
+            }
+
+            return -1;
+        }
+
         public bool IsEmployee()
         {
             var httpContext = _accessor.HttpContext;

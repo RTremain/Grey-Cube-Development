@@ -36,7 +36,7 @@ namespace GCDGameStore.Controllers
             }
 
             var eventList = await _context.Event.ToListAsync();
-            var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            var memberId = _loginStatus.GetMemberId();
 
             var attendanceList = await _context.Attendance
                 .Where(a => a.MemberId == memberId)
@@ -90,7 +90,7 @@ namespace GCDGameStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,Title,EventDate,Description")] Event @event)
+        public async Task<IActionResult> Create(string eventId)
         {
             if (_loginStatus.IsNotLoggedIn())
             {
@@ -98,20 +98,20 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
-            if (ModelState.IsValid)
-            {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(@event);
+
+            var Attendance = new Attendance { MemberId = _loginStatus.GetMemberId(), EventId = Convert.ToInt32(eventId) };
+
+            _context.Add(Attendance);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
        
         // POST: MemberEvent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string EventId)
         {
             if (_loginStatus.IsNotLoggedIn())
             {
@@ -119,8 +119,13 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
-            var @event = await _context.Event.FindAsync(id);
-            _context.Event.Remove(@event);
+
+            var attendance = await _context.Attendance
+                                        .Where(a => a.EventId == Convert.ToInt32(EventId))
+                                        .Where(a => a.MemberId == _loginStatus.GetMemberId())
+                                        .SingleAsync();
+
+            _context.Attendance.Remove(attendance);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

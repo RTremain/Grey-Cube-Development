@@ -25,7 +25,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Registered)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -41,12 +40,20 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
+                @if (item.Registered)
+                {
+                    <form asp-action="Delete">
+                        <button type="submit" name="EventId" value="@item.AttendingEventId">Unregister</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Create">
+                        <button type="submit" name="EventId" value="@item.AttendingEventId">Register</button>
+                    </form>
+                }
+                
                 @Html.DisplayFor(modelItem => item.Registered)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AttendingEventId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AttendingEventId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AttendingEventId">Delete</a>
             </td>
         </tr>
 }

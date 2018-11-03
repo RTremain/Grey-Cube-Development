@@ -36,7 +36,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
-            var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            var memberId = _loginStatus.GetMemberId();
             var gcdGameStoreContext = 
                 _context.Friend
                     .Include(f => f.FriendMember)
@@ -120,7 +120,7 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
-            var memberId = Convert.ToInt32(HttpContext.Session.GetString("MemberId"));
+            var memberId = _loginStatus.GetMemberId();
             var friendIdInt = Convert.ToInt32(friendId);
 
             var friendship1 = await _context.Friend.Where(f => f.MemberId == memberId).Where(f => f.FriendMemberId == friendIdInt).SingleOrDefaultAsync();
