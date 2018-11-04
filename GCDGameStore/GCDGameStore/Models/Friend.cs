@@ -11,9 +11,11 @@ namespace GCDGameStore.Models
     {
         public int FriendId { get; set; }
 
+        [Required]
         public int MemberId { get; set; }
         public Member Member { get; set; }
 
+        [Required]
         public int FriendMemberId { get; set; }
         public Member FriendMember { get; set; }
     }

@@ -14,7 +14,7 @@ namespace GCDGameStore.Models
     {
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (MailingCity == null && MailingPostalCode == null && MailingProvince == null&& MailingStreetAddress == null)
+            if (MailingCity == null && MailingPostalCode == null && MailingProvince == null && MailingStreetAddress == null)
             {
 
             }

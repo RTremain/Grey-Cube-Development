@@ -54,7 +54,11 @@ namespace GCDGameStore.Controllers
             return View(review);
         }
 
-        // GET: Review/Create
+        /// <summary>
+        ///     Review/Create
+        /// </summary>
+        /// <param name="id">GameId</param>
+        /// <returns></returns>
         public async Task<IActionResult> Create(int? id)
         {
             if (_loginStatus.IsNotLoggedIn())

@@ -28,6 +28,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<Friend> Friend { get; set; }
         public virtual DbSet<Attendance> Attendance { get; set; }
         public DbSet<Review> Review { get; set; }
+        public DbSet<Rating> Rating { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,6 +41,8 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Library>().ToTable("Library");
             modelBuilder.Entity<Wishlist>().ToTable("Wishlist");
             modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
+            modelBuilder.Entity<Review>().ToTable("Review");
+            modelBuilder.Entity<Rating>().ToTable("Rating");
 
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.Event)
@@ -61,11 +64,6 @@ namespace GCDGameStore.Models
 
             
         }
-
-
-        public DbSet<GCDGameStore.ViewModels.AttendingEvent> AttendingEvent { get; set; }
-        public DbSet<GCDGameStore.ViewModels.MemberGameDetail> MemberGameDetail { get; set; }
-        public DbSet<GCDGameStore.ViewModels.UserLogin> UserLogin { get; set; }
 
     }
 }

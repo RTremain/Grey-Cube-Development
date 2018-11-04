@@ -1,0 +1,35 @@
+﻿@model GCDGameStore.Models.Rating
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>Rating</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Rating (1 - 5):</label>
+                <input type="number" min="1" max="5" asp-for="RatingScore" class="form-control" />
+                <span asp-validation-for="RatingScore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="MemberId" type="hidden" />
+                <input asp-for="GameId" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Member" asp-action="Library">Back to Library</a>
+</div>
+

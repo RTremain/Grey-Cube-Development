@@ -16,6 +16,7 @@ namespace GCDGameStore.ViewModels
             GameId = library.GameId;
             Game = library.Game;
             HasReview = false;
+            HasRating = false;
         }
 
         public int MemberLibraryId { get; set; }
@@ -25,5 +26,9 @@ namespace GCDGameStore.ViewModels
 
         public bool HasReview { get; set; }
         public int ReviewId { get; set; }
+
+        public bool HasRating { get; set; }
+        public int RatingId { get; set; }
+        public Rating Rating { get; set; }
     }
 }

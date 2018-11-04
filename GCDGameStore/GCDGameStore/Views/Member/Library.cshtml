@@ -17,6 +17,7 @@
                 @Html.DisplayNameFor(model => model.Game)
             </th>
             <th></th>
+            <th>User Rating</th>
             <th></th>
         </tr>
     </thead>
@@ -34,6 +35,16 @@
                 else
                 {
                     <a asp-controller="Review" asp-action="Create" asp-route-id="@item.GameId">Create Review</a>
+                }
+            </td>
+            <td>
+                @if (item.HasRating)
+                {
+                    @Html.DisplayFor(modelItem => item.Rating.RatingScore)
+                }
+                else
+                {
+                    <a asp-controller="Rating" asp-action="Create" asp-route-id="@item.GameId">Rate Game</a>
                 }
             </td>
             <td>

@@ -65,7 +65,7 @@ namespace GCDGameStore.Controllers
 
             var memberLibrary = new List<MemberLibrary>();
 
-            // get all reviews from user and place ids in dictionary
+            // Get all reviews from user and place ids in dictionary
             Dictionary<int, int> reviewLookup = new Dictionary<int, int>();
             var memberReviews = await _context.Review.Where(r => r.MemberId == memberId).ToListAsync();
 
@@ -73,6 +73,16 @@ namespace GCDGameStore.Controllers
             {
                 reviewLookup.Add(r.GameId, r.ReviewId);
             }
+
+            // Get all ratings from user and place ids in second dictionary
+            Dictionary<int, Rating> ratingLookup = new Dictionary<int, Rating>();
+            var memberRatings = await _context.Rating.Where(r => r.MemberId == memberId).ToListAsync();
+
+            foreach (Rating r in memberRatings)
+            {
+                ratingLookup.Add(r.GameId, r);
+            }
+            
 
             foreach (Library l in libraryList)
             {
@@ -86,6 +96,17 @@ namespace GCDGameStore.Controllers
                 else
                 {
                     memberLibraryItem.HasReview = false;
+                }
+
+                if (ratingLookup.ContainsKey(l.GameId))
+                {
+                    memberLibraryItem.RatingId = ratingLookup[l.GameId].RatingId;
+                    memberLibraryItem.HasRating = true;
+                    memberLibraryItem.Rating = ratingLookup[l.GameId];
+                }
+                else
+                {
+                    memberLibraryItem.HasRating = false;
                 }
 
                 memberLibrary.Add(memberLibraryItem);
@@ -345,6 +366,11 @@ namespace GCDGameStore.Controllers
             {
                 return NotFound();
             }
+
+            // These should not be passed to the view
+            member.PwHash = "Redacted";
+            member.PwSalt = "Redacted";
+
             return View(member);
         }
 
@@ -355,13 +381,34 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MemberId,Username,PwHash,PwSalt,Email,Phone,MailingStreetAddress,MailingPostalCode,MailingCity,MailingProvince,ShippingStreetAddress,ShippingPostalCode,ShippingCity,ShippingProvince")] Member member)
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id != member.MemberId)
             {
                 return NotFound();
             }
 
+            if (member.MemberId != _loginStatus.GetMemberId())
+            {
+                _logger.LogError("Error: {Message}", "Session does not match model");
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to profile");
+                return RedirectToAction(nameof(Details));
+            }
+
             if (ModelState.IsValid)
             {
+                // These var is readonly, so we do not want tracking for when we save changes
+                var storedMember = await _context.Member.AsNoTracking().Where(m => m.MemberId == _loginStatus.GetMemberId()).SingleOrDefaultAsync();
+
+                // Restore Username, hash, and salt
+                member.Username = storedMember.Username;
+                member.PwHash = storedMember.PwHash;
+                member.PwSalt = storedMember.PwSalt;
+
                 try
                 {
                     _context.Update(member);
@@ -403,7 +450,9 @@ namespace GCDGameStore.Controllers
                 return NotFound();
             }
 
-            return View(member);
+            // Action is disabled for now
+            return RedirectToAction(nameof(Index));
+            //return View(member);
         }
 
         public async Task<IActionResult> DeleteCreditCard(int? id)

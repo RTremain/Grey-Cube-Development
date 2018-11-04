@@ -1,15 +1,15 @@
 
 GCD - Iteration Phase 2 
 
-
+------------------------------------------------
 Use Cases
 
 
 
 16 View profile - Done
-19 Edit profile
-20 Edit mailing address
-21 Edit shipping address
+19 Edit profile - Done
+20 Edit mailing address - Done
+21 Edit shipping address - Done
 
 22 Add credit card - Done
 23 Delete credit card - Done
@@ -23,7 +23,7 @@ Use Cases
 38 Download game - Done
 26 Add to wish list - Done
 27 Remove game from wish list - Done
-32 Rate game
+32 Rate game - Done
 33 Add game review - Done
 
 39 Register for event
@@ -32,11 +32,26 @@ Use Cases
 
  - Done
 
-Employee Login - Done
-Employee Logout - Done
-Member Login - Done
-Member Logout - Done
-Add Free Game to Library - Done
+------------------------------------------------
+
+Additional Use cases:
+
+	Employee Login - Done
+	Employee Logout - Done
+	Member Login - Done
+	Member Logout - Done
+	Add Free Game to Library - Done
+
+------------------------------------------------
+
+Remaining Tasks:
+
+- Annotate all models - Done
+- Unit tests of business logic
 
 
+------------------------------------------------
 
+Reminder:
+
+- Record two hours work for Sunday Nov 4th

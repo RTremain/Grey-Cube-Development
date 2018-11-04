@@ -11,20 +11,14 @@ namespace GCDGameStore.Models
     {
         public int MemberId { get; set; }
 
-        [Required]
-        [MinLength(5)]
-        [StringLength(15)]
         public string Username { get; set; }
 
-        [Required]
         public string PwHash { get; set; }
 
         public string PwSalt { get; set; }
 
-        [EmailAddress]
         public string Email { get; set; }
 
-        [Phone]
         public string Phone { get; set; }
 
         public string MailingStreetAddress { get; set; }
