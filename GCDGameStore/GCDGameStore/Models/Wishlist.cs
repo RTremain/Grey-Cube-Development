@@ -13,8 +13,8 @@ namespace GCDGameStore.Models
         public int WishlistId { get; set; }
 
         [Required]
-        [ForeignKey("Member")]
         public int MemberId { get; set; }
+        public Member Member { get; set; }
 
         [Required]
         public int GameId { get; set; }

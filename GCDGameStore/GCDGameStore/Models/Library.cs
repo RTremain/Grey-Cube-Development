@@ -13,6 +13,7 @@ namespace GCDGameStore.Models
 
         [Required]
         public int MemberId { get; set; }
+        public Member Member { get; set; }
 
         [Required]
         public int GameId { get; set; }

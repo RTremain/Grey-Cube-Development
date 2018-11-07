@@ -37,7 +37,7 @@ namespace GCDGameStore.Models
         public string PostalCode { get; set; }
 
         [Required]
-        [ForeignKey("MemberId")]
         public int MemberId { get; set; }
+        public Member Member { get; set; }
     }
 }
