@@ -13,7 +13,7 @@ namespace GCDGameStore.Classes
         private static readonly IReadOnlyList<byte> pepper = new byte[16] { 0xD1, 0xDD, 0xE7, 0xB9, 0x6F, 0x7A, 0x68, 0x0E, 0xB9, 0x9A, 0x15, 0x8E, 0xC2, 0x2E, 0xD1, 0x31 };
 
         /// <summary>
-        ///     Returns randomly generated 128-bit salt. Currently not in use.
+        ///     Returns randomly generated 128-bit salt.
         /// </summary>
         /// <returns>byte[] form of a salt</returns>
         public static byte[] GenSalt()
@@ -28,17 +28,22 @@ namespace GCDGameStore.Classes
         }
 
         /// <summary>
-        ///     Hashes a password with the application pepper used as a salt, 
-        ///     any salt passed to method is not used.
+        ///     Hashes a password with the application pepper concatenated as a suffix to the salt
         /// </summary>
         /// <param name="password">Password entered by user</param>
-        /// <param name="salt">Salt associated with account, not used</param>
+        /// <param name="salt">Salt associated with account</param>
         /// <returns>
         ///     base 64 string of resulting hash
         /// </returns>
         public static string GenHash(string password, byte[] salt)
         {
-            byte[] newSalt = pepper.ToArray<byte>();
+            byte[] pepperArray = pepper.ToArray<byte>();
+
+            byte[] newSalt = new byte[pepperArray.Length + salt.Length];
+            salt.CopyTo(newSalt, 0);
+            pepperArray.CopyTo(newSalt, salt.Length);
+
+
 
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: password,
