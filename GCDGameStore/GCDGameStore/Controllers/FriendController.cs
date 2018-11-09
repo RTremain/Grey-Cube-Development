@@ -77,17 +77,18 @@ namespace GCDGameStore.Controllers
 
             HttpContext.Session.SetString("Error", "");
 
-            if (memberId == friend.MemberId)
-            {
-                HttpContext.Session.SetString("Error", "You can't add yourself.");
-                return View();
-            }
-
             if (friend == null)
             {
                 HttpContext.Session.SetString("Error", "User not found.");
                 return View();
             }
+
+            if (memberId == friend.MemberId)
+            {
+                HttpContext.Session.SetString("Error", "You can't add yourself.");
+                return View();
+            }
+            
 
             var friendship = await _context.Friend.Where(f => f.MemberId == memberId).Where(f => f.FriendMemberId == friend.MemberId).SingleOrDefaultAsync();
 

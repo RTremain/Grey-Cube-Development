@@ -12225,23 +12225,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mduggan0602\\.nuget\\packages\\": {},
+    "C:\\Users\\rtremain4626\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\GCDGameStore.csproj",
+      "projectUniqueName": "\\\\FSSTU02D\\Stu4\\Home\\Rtremain4626\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\GCDGameStore.csproj",
       "projectName": "GCDGameStore",
-      "projectPath": "G:\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\GCDGameStore.csproj",
-      "packagesPath": "C:\\Users\\mduggan0602\\.nuget\\packages\\",
-      "outputPath": "G:\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\obj\\",
+      "projectPath": "\\\\FSSTU02D\\Stu4\\Home\\Rtremain4626\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\GCDGameStore.csproj",
+      "packagesPath": "C:\\Users\\rtremain4626\\.nuget\\packages\\",
+      "outputPath": "\\\\FSSTU02D\\Stu4\\Home\\Rtremain4626\\Level5\\MSEnterprise\\Grey-Cube-Development\\GCDGameStore\\GCDGameStore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\mduggan0602\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\rtremain4626\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
