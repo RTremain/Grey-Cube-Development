@@ -77,6 +77,12 @@ namespace GCDGameStore.Controllers
 
             HttpContext.Session.SetString("Error", "");
 
+            if (memberId == friend.MemberId)
+            {
+                HttpContext.Session.SetString("Error", "You can't add yourself.");
+                return View();
+            }
+
             if (friend == null)
             {
                 HttpContext.Session.SetString("Error", "User not found.");
