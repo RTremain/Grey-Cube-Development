@@ -177,7 +177,7 @@ namespace GCDGameStore.Controllers
             return View(game);
         }
 
-        // GET: Member/Details/5
+        // GET: Member/Details
         public async Task<IActionResult> Details()
         {
             if (_loginStatus.IsNotLoggedIn())
@@ -200,6 +200,12 @@ namespace GCDGameStore.Controllers
 
         public IActionResult CreateCreditCard()
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
             var newCreditCard = new CreditCard { MemberId = _loginStatus.GetMemberId() };
 
             return View(newCreditCard);
@@ -334,7 +340,7 @@ namespace GCDGameStore.Controllers
                 if (testHash == memberCheck.PwHash)
                 {
                     _loginStatus.MemberLogin(memberCheck.MemberId.ToString());                    
-                    return RedirectToAction(nameof(Details), new { id = memberCheck.MemberId });
+                    return RedirectToAction(nameof(Details));
                 }
                 HttpContext.Session.SetString("Error", "Invalid username or password.");
 
@@ -349,6 +355,160 @@ namespace GCDGameStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        public IActionResult ChangePassword()
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
+            HttpContext.Session.SetString("Error", "");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword, string newPasswordConfirm)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
+            var memberId = _loginStatus.GetMemberId();
+            var member = await _context.Member.Where(m => m.MemberId == memberId).SingleOrDefaultAsync();
+
+            // hash old password, compare to stored
+            byte[] salt = Convert.FromBase64String(member.PwSalt);
+            var testHash = AccountHashing.GenHash(oldPassword, salt);
+
+            
+            if (testHash == member.PwHash)
+            {
+                // if valid, compare new password entries
+                if (newPassword == newPasswordConfirm)
+                {
+                    // if they match, generate new salt, store new salt and store hashed new password
+
+                    var newSalt = AccountHashing.GenSalt();
+                    var newHash = AccountHashing.GenHash(newPassword, newSalt);
+
+                    member.PwSalt = Convert.ToBase64String(newSalt);
+                    member.PwHash = newHash;
+
+                    try
+                    {
+                        _context.Update(member);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!MemberExists(member.MemberId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Details));
+                }
+                else
+                {
+                    HttpContext.Session.SetString("Error", "New passwords do not match");
+
+                }
+            }
+            else
+            {
+                HttpContext.Session.SetString("Error", "Invalid old password");
+            }
+
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            HttpContext.Session.SetString("Error", "");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("Username,Email,Password,PasswordConfirm")] MemberRegister user)
+        {
+            if (_loginStatus.IsEmployee())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            HttpContext.Session.SetString("Error", "");
+
+            if (ModelState.IsValid)
+            {
+                if (user == null)
+                {
+                    HttpContext.Session.SetString("Error", "Invalid username or password.");
+                    return View();
+                }
+
+                var memberCheck = await _context.Member.AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Username == user.Username);
+
+                if (memberCheck != null)
+                {
+                    HttpContext.Session.SetString("Error", "Username already exists.");
+                    user.Username = "";
+                    return View(user);
+                }
+
+                if (user.Password == user.PasswordConfirm)
+                {
+                    byte[] salt = AccountHashing.GenSalt();
+                    var hash = AccountHashing.GenHash(user.Password, salt);
+
+                    Member newMember = new Member
+                    {
+                        Username = user.Username,
+                        PwSalt = Convert.ToBase64String(salt),
+                        PwHash = hash,
+                        Email = user.Email
+                    };
+
+                    try
+                    {
+                        _context.Add(newMember);
+                        await _context.SaveChangesAsync();
+
+                        // retrieve member from DB for new member ID
+                        var storedNewMember = await _context.Member.AsNoTracking()
+                            .FirstOrDefaultAsync(m => m.Username == user.Username);
+
+                        _loginStatus.MemberLogin(storedNewMember.MemberId.ToString());
+                        return RedirectToAction(nameof(Details));
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Error: {ex.GetBaseException().Message}");
+                    }
+                    
+                }
+                else
+                {
+                    HttpContext.Session.SetString("Error", "Passwords do not match.");
+                    user.Password = "";
+                    user.PasswordConfirm = "";
+                    return View(user);
+                }
+
+            } // end if (ModelState.IsValid)
+
+            return View(user);
+        }
 
         // GET: Member/Edit/5
         public async Task<IActionResult> Edit()

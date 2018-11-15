@@ -1,0 +1,30 @@
+GCD - Iteration 3 Use Cases
+
+14	Visitor registers - Done
+15	Log In - Done
+40	Log out - Done
+18	Change Password - Done
+17	Reset password
+
+24	Search games
+
+34	Add to cart
+45	View cart
+46	Edit cart
+35	Delete from cart
+36	Check out 
+37	Submit order
+
+43	View pending shipments
+13	Update status of ship
+
+11	Publish review
+41	View pending reviews
+42	Reject review
+
+44	View own wishlist - Done
+31	View friend's wish list
+
+
+Reports need live data
+Game views show reviews and ratings

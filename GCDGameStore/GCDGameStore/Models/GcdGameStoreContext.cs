@@ -65,5 +65,8 @@ namespace GCDGameStore.Models
             
         }
 
+
+        public DbSet<GCDGameStore.ViewModels.MemberRegister> MemberRegister { get; set; }
+
     }
 }
