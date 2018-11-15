@@ -28,3 +28,4 @@ GCD - Iteration 3 Use Cases
 
 Reports need live data
 Game views show reviews and ratings
+Button to calculate rating averages for games
