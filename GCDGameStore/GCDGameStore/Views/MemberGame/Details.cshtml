@@ -45,6 +45,13 @@
                 <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Wishlist</button>
             </form>
         }
+
+        @if (!Model.OnCart)
+        {
+            <form asp-controller="Cart" asp-action="AddItem">
+                <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Cart</button>
+            </form>
+        }
     }
 
 

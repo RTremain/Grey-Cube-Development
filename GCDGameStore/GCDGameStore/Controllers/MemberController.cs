@@ -21,12 +21,14 @@ namespace GCDGameStore.Controllers
         private readonly GcdGameStoreContext _context;
         private readonly ILogger _logger;
         private readonly LoginStatus _loginStatus;
+        private readonly Cart _cart;
 
         public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger, IHttpContextAccessor accessor)
         {
             _context = context;
             _logger = logger;
             _loginStatus = new LoginStatus(accessor);
+            _cart = new Cart(accessor, logger);
         }
 
         // GET: Member

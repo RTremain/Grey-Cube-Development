@@ -20,6 +20,7 @@ namespace GCDGameStore.ViewModels
             OnWishlist = false;
             HasRating = false;
             HasReview = false;
+            OnCart = false;
         }
 
         public int MemberGameDetailId { get; set; }
@@ -32,5 +33,6 @@ namespace GCDGameStore.ViewModels
         public bool OnWishlist { get; set; }
         public bool HasRating { get; set; }
         public bool HasReview { get; set; }
+        public bool OnCart { get; set; }
     }
 }

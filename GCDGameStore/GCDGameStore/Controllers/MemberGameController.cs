@@ -18,12 +18,14 @@ namespace GCDGameStore.Controllers
         private readonly GcdGameStoreContext _context;
         private readonly ILogger _logger;
         private readonly LoginStatus _loginStatus;
+        private readonly Cart _cart;
 
         public MemberGameController(GcdGameStoreContext context, ILogger<MemberGameController> logger, IHttpContextAccessor accessor)
         {
             _context = context;
             _logger = logger;
             _loginStatus = new LoginStatus(accessor);
+            _cart = new Cart(accessor, logger);
         }
 
         // GET: MemberGame
@@ -178,10 +180,19 @@ namespace GCDGameStore.Controllers
             {
                 MemberGameDetail.InLibrary = true;
             }
-            else if (await wishlistEntry != null)
+            else
             {
-                MemberGameDetail.OnWishlist = true;
+                MemberGameDetail.OnCart = _cart.OnCart(gameId);
+
+                if (await wishlistEntry != null)
+                {
+                    MemberGameDetail.OnWishlist = true;
+                }
             }
+            
+            
+
+
 
             return View(MemberGameDetail);
         }
