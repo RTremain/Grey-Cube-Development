@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GCDGameStore.ViewModels.CartViewModel>
+﻿@model List<GCDGameStore.ViewModels.CartViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,35 +7,42 @@
 
 <h2>Index</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Game)
-            </th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.Title)
-            </td>
-            <td>
-                
-            </td>
-            <td>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6"><h3>Title</h3></div>
+        <div class="col-md-2"><h3>Quantity</h3></div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-controller="Cart" asp-action="UpdateCart" method="post" role="form">
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <div class="row" style="height: 40px;">
+                        <div class="col-md-9">@Model[i].Game.Title</div>
+                        <div class="col-md-3">
+                            @Html.HiddenFor(model => Model[i].GameId)
+                            <input asp-for="@Model[i].Quantity" value="@Model[i].Quantity" type="number" min="1" max="9999" class="form-control" />
+                        </div>
+                    </div>
+                }
 
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                <input type="submit" value="Save Quantity Changes" class="btn btn-default" />
+            </form>
+
+        </div>
+        <div class="col-md-4">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <div class="row" style="height: 40px;">
+                    <div class="col">
+                        <form asp-controller="Cart" asp-action="DeleteItem">
+                            <button type="submit" name="GameId" value="@Model[i].GameId" class="btn btn-default">Remove From Cart</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

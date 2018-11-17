@@ -102,8 +102,16 @@ namespace GCDGameStore.Classes
 
         public void UpdateCart(List<CartItem> newCart)
         {
-            // assign copy of supplied list
-            cartList = newCart.ToList();
+            if (newCart != null)
+            {
+                // assign copy of supplied list
+                cartList = newCart.ToList();
+            }
+            else
+            {
+                cartList = null;
+            }
+            
             SetCartSession();
         }
 

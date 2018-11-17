@@ -12,8 +12,8 @@ GCD - Iteration 3 Use Cases
 
 34 Add to cart - Done
 45 View cart - Done
-46 Edit cart
-35 Delete from cart
+46 Edit cart - Done
+35 Delete from cart - Done
 36 Check out
 37 Submit order
 
@@ -44,4 +44,4 @@ Button to calculate rating averages for games
 
 --------------------------------------------------------
 
-Log 3.5 hours for 11/16
+Log 5.5 hours for 11/16

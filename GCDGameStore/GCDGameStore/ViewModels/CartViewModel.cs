@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using GCDGameStore.Classes;
@@ -20,6 +21,8 @@ namespace GCDGameStore.ViewModels
 
         public int CartViewModelId { get; set; }
 
+        [Required]
+        [Range(1, 9999)]
         public int Quantity { get; set; }
 
         public int GameId { get; set; }

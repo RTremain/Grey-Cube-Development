@@ -32,17 +32,17 @@ namespace GCDGameStore.Controllers
         public async Task<IActionResult> Index()
         {
             var cartList = _cart.GetCart();
-            var cartViewList = new List<CartViewModel>();
+            var cartItemList = new List<CartViewModel>();
 
             foreach (CartItem item in cartList)
             {
                 var game = await _context.Game.Where(g => g.GameId == item.Id).FirstOrDefaultAsync();
                 var newCartViewItem = new CartViewModel(item, game);
 
-                cartViewList.Add(newCartViewItem);
+                cartItemList.Add(newCartViewItem);
             }
 
-            return View(cartViewList);
+            return View(cartItemList);
         }
 
 
@@ -81,14 +81,56 @@ namespace GCDGameStore.Controllers
         }
 
         // POST: Cart/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteItem")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteItem(string GameId)
         {
-            
+
+            if (GameId == null || GameId == "")
+            {
+                _logger.LogError("Error: {Message}", "null ID supplied to cart DeleteItem");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var id = Convert.ToInt32(GameId);
+
+            // make sure id exists as a game
+            var gameCheck = await _context.Game.Where(g => g.GameId == id).SingleOrDefaultAsync();
+
+            if (gameCheck != null)
+            {
+                if (_cart.OnCart(id))
+                {
+                    _cart.RemoveItem(id);
+                }
+                else
+                {
+                    _logger.LogError("Error: {Message}", "Game not on cart");
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
+        
+        [HttpPost, ActionName("UpdateCart")]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(List<CartViewModel> cartViewModels)
+        {
+            var updatedList = new List<CartItem>();
+            foreach (CartViewModel item in cartViewModels)
+            {
+                var newCartItem = new CartItem(item.GameId, item.Quantity);
+                updatedList.Add(newCartItem);
+            }
+
+            _cart.UpdateCart(updatedList);
+            return RedirectToAction(nameof(Index));
+        }
         
     }
 }
