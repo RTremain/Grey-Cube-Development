@@ -31,6 +31,12 @@ namespace GCDGameStore.Controllers
         // GET: Cart
         public async Task<IActionResult> Index()
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
             var cartList = _cart.GetCart();
             var cartItemList = new List<CartViewModel>();
 
@@ -50,6 +56,12 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddItem(string GameId)
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
             if (GameId == null || GameId == "")
             {
                 _logger.LogError("Error: {Message}", "null ID supplied to cart AddItem");
@@ -85,6 +97,11 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteItem(string GameId)
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
 
             if (GameId == null || GameId == "")
             {
@@ -121,6 +138,12 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdateCart(List<CartViewModel> cartViewModels)
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
             var updatedList = new List<CartItem>();
             foreach (CartViewModel item in cartViewModels)
             {

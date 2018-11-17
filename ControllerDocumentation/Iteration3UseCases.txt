@@ -22,11 +22,11 @@ GCD - Iteration 3 Use Cases
 
 
 
-11 Publish review
-41 View pending reviews
+11 Publish review - Done
+41 View pending reviews - Done
 42 Reject review
 
-
+ - Done
 
 44 View own wishlist - Done
 31 View friend's wish list

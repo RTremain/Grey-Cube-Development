@@ -1,0 +1,60 @@
+﻿@model IEnumerable<GCDGameStore.Models.Review>
+
+@{
+    ViewData["Title"] = "PendingReviewList";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+}
+
+<h2>PendingReviewList</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recommended)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Game.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recommended)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReviewText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Username)
+            </td>
+            <td>
+                <form asp-action="ApproveReview">
+                    <button class="btn btn-default" type="submit" name="ReviewId" value="@item.ReviewId">Approve</button>
+                </form>
+            </td>
+            <td>
+                <form asp-action="RejectReview">
+                    <button class="btn btn-default" type="submit" name="ReviewId" value="@item.ReviewId">Reject</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
