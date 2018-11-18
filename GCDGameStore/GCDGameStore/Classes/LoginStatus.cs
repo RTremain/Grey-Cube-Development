@@ -9,6 +9,9 @@ namespace GCDGameStore.Classes
     public class LoginStatus
     {
         private readonly IHttpContextAccessor _accessor;
+        private const string MEMBER_ID = "MemberId";
+        private const string LOGIN = "Login";
+        private const string EMPLOYEE_LOGIN = "EmployeeLogin";
 
         public LoginStatus (IHttpContextAccessor accessor)
         {
@@ -18,7 +21,7 @@ namespace GCDGameStore.Classes
         public bool IsNotLoggedIn()
         {
             var httpContext = _accessor.HttpContext;
-            var memberId = httpContext.Session.GetString("MemberId");
+            var memberId = httpContext.Session.GetString(MEMBER_ID);
 
             if (memberId == null || memberId == "")
             {
@@ -32,16 +35,16 @@ namespace GCDGameStore.Classes
         {
             var httpContext = _accessor.HttpContext;
 
-            httpContext.Session.SetString("Login", "true");
-            httpContext.Session.SetString("MemberId", memberId);
+            httpContext.Session.SetString(LOGIN, "true");
+            httpContext.Session.SetString(MEMBER_ID, memberId);
         }
 
         public void MemberLogout()
         {
             var httpContext = _accessor.HttpContext;
 
-            httpContext.Session.SetString("Login", "false");
-            httpContext.Session.SetString("MemberId", "");
+            httpContext.Session.SetString(LOGIN, "false");
+            httpContext.Session.SetString(MEMBER_ID, "");
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace GCDGameStore.Classes
         public int GetMemberId()
         {
             var httpContext = _accessor.HttpContext;
-            var memberId = httpContext.Session.GetString("MemberId");
+            var memberId = httpContext.Session.GetString(MEMBER_ID);
 
             if (memberId != null && memberId != "")
             {
@@ -65,7 +68,7 @@ namespace GCDGameStore.Classes
         {
             var httpContext = _accessor.HttpContext;
 
-            if (httpContext.Session.GetString("EmployeeLogin") == "true")
+            if (httpContext.Session.GetString(EMPLOYEE_LOGIN) == "true")
             {
                 return true;
             }
@@ -76,13 +79,13 @@ namespace GCDGameStore.Classes
         public void EmployeeLogin()
         {
             var httpContext = _accessor.HttpContext;
-            httpContext.Session.SetString("EmployeeLogin", "true");
+            httpContext.Session.SetString(EMPLOYEE_LOGIN, "true");
         }
 
         public void EmployeeLogout()
         {
             var httpContext = _accessor.HttpContext;
-            httpContext.Session.SetString("EmployeeLogin", "false");
+            httpContext.Session.SetString(EMPLOYEE_LOGIN, "false");
         }
     }
 }

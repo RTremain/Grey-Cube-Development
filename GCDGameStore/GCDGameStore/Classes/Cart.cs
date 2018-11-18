@@ -15,6 +15,10 @@ namespace GCDGameStore.Classes
 
         private readonly IHttpContextAccessor _accessor;
         private readonly ILogger _logger;
+        
+        // setting our session keys
+        private const string CART = "cart";
+        private const string CART_COUNT = "cartCount";
 
 
         private int count;
@@ -47,7 +51,7 @@ namespace GCDGameStore.Classes
                 count = 0;
             }
 
-            _accessor.HttpContext.Session.SetString("cartCount", Count.ToString());
+            _accessor.HttpContext.Session.SetString(CART_COUNT, Count.ToString());
         }
 
 
@@ -58,14 +62,14 @@ namespace GCDGameStore.Classes
         private void SetCartSession()
         {
             var httpContext = _accessor.HttpContext;
-            httpContext.Session.SetString("cart", JsonConvert.SerializeObject(cartList));
+            httpContext.Session.SetString(CART, JsonConvert.SerializeObject(cartList));
             SetSessionCount();
         }
 
         private void GetCartSession()
         {
             var httpContext = _accessor.HttpContext;
-            var sessionValue = httpContext.Session.GetString("cart");
+            var sessionValue = httpContext.Session.GetString(CART);
 
             if (sessionValue == "" || sessionValue == null)
             {
@@ -129,6 +133,12 @@ namespace GCDGameStore.Classes
             }
 
             SetCartSession();
+        }
+
+        public void ClearCart()
+        {
+            _accessor.HttpContext.Session.SetString(CART, "");
+            _accessor.HttpContext.Session.SetString(CART_COUNT, "");
         }
 
     }

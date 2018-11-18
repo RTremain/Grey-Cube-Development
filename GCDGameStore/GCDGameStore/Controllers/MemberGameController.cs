@@ -44,6 +44,12 @@ namespace GCDGameStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchIndex(string searchText)
         {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
             var results = await _context.Game.Where(g => g.Title.Contains(searchText)).ToListAsync();
 
             return View("Index", results);

@@ -47,4 +47,4 @@ Reports need live data
 --------------------------------------------------------
 
 Log 5.5 hours for 11/16
-Log 1.5 hours for 11/17
+Log 5 hours for 11/17

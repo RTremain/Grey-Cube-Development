@@ -341,7 +341,8 @@ namespace GCDGameStore.Controllers
 
                 if (testHash == memberCheck.PwHash)
                 {
-                    _loginStatus.MemberLogin(memberCheck.MemberId.ToString());                    
+                    _loginStatus.MemberLogin(memberCheck.MemberId.ToString());
+                    _cart.ClearCart();
                     return RedirectToAction(nameof(Details));
                 }
                 HttpContext.Session.SetString("Error", "Invalid username or password.");
@@ -354,6 +355,7 @@ namespace GCDGameStore.Controllers
         public IActionResult Logout()
         {
             _loginStatus.MemberLogout();
+            _cart.ClearCart();
             return RedirectToAction("Index", "Home");
         }
 
