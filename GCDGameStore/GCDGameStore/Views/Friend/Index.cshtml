@@ -17,6 +17,7 @@
                 @Html.DisplayNameFor(model => model.FriendMember.Username)
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,10 +27,12 @@
                 @Html.DisplayFor(modelItem => item.FriendMember.Username)
             </td>
             <td>
+                <a asp-action="FriendWishlist" asp-route-id="@item.FriendMember.MemberId" class="btn btn-default">View Wishlist</a>
+            </td>
+            <td>
                 <form asp-action="Delete">
-                    <button type="submit" name="friendId" value="@item.FriendMember.MemberId">Delete Friend</button>
+                    <button type="submit" name="friendId" value="@item.FriendMember.MemberId" class="btn btn-default">Delete Friend</button>
                 </form>
-                
             </td>
         </tr>
 }

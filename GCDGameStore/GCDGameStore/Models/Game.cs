@@ -12,5 +12,7 @@ namespace GCDGameStore.Models
         public string Title { get; set; }
 
         public DateTime ReleaseDate { get; set; }
+
+        public float AverageRating { get; set; }
     }
 }

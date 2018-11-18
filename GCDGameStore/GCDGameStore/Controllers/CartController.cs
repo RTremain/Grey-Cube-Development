@@ -92,7 +92,46 @@ namespace GCDGameStore.Controllers
             return RedirectToAction("Details", "MemberGame", new { id });
         }
 
-        // POST: Cart/Delete/5
+        [HttpPost, ActionName("DeleteItemFromGameDetails")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteItemFromGameDetails(string GameId)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            if (GameId == null || GameId == "")
+            {
+                _logger.LogError("Error: {Message}", "null ID supplied to cart DeleteItem");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var id = Convert.ToInt32(GameId);
+
+            // make sure id exists as a game
+            var gameCheck = await _context.Game.Where(g => g.GameId == id).SingleOrDefaultAsync();
+
+            if (gameCheck != null)
+            {
+                if (_cart.OnCart(id))
+                {
+                    _cart.RemoveItem(id);
+                }
+                else
+                {
+                    _logger.LogError("Error: {Message}", "Game not on cart");
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Details", "MemberGame", new { id } );
+        }
+
         [HttpPost, ActionName("DeleteItem")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteItem(string GameId)

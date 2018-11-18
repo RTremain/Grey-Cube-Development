@@ -6,22 +6,31 @@ GCD - Iteration 3 Use Cases
 15 Log In - Done
 40 Log out - Done
 18 Change Password - Done
+
+24 Search games - Done
+
 34 Add to cart - Done
 45 View cart - Done
 46 Edit cart - Done
 35 Delete from cart - Done
+
 11 Publish review - Done
 41 View pending reviews - Done
 42 Reject review
 
  - Done
+
 44 View own wishlist - Done
+31 View friend's wish list
+
+
+ - Done
+
+Game views show reviews and ratings - Done
 
 --------------------------------------------------------
 
 17 Reset password
-
-24 Search games
 
 36 Check out
 37 Submit order
@@ -31,18 +40,9 @@ GCD - Iteration 3 Use Cases
 
 
 
-31 View friend's wish list
-
-
-
-
 --------------------------------------------------------
 
 Reports need live data
-
-Game views show reviews and ratings
-
-Button to calculate rating averages for games
 
 --------------------------------------------------------
 

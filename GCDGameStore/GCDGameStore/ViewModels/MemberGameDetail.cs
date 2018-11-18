@@ -18,9 +18,14 @@ namespace GCDGameStore.ViewModels
 
             InLibrary = false;
             OnWishlist = false;
-            HasRating = false;
             HasReview = false;
             OnCart = false;
+
+            if (game.AverageRating != default(float))
+            {
+                HasRating = true;
+                AverageRating = (float)(Math.Round((double)game.AverageRating, 2));
+            }
         }
 
         public int MemberGameDetailId { get; set; }
@@ -32,7 +37,11 @@ namespace GCDGameStore.ViewModels
         public bool InLibrary { get; set; }
         public bool OnWishlist { get; set; }
         public bool HasRating { get; set; }
+        public float AverageRating { get; set; }
+
         public bool HasReview { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
+
         public bool OnCart { get; set; }
     }
 }

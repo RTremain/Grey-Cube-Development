@@ -135,7 +135,7 @@ namespace GCDGameStore.Controllers
 
             if (friendship1 == null || friendship2 == null)
             {
-                _logger.LogError("One or both friendship entires null");
+                _logger.LogError("One or both friendship entries are null");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -148,6 +148,44 @@ namespace GCDGameStore.Controllers
         private bool FriendExists(int id)
         {
             return _context.Friend.Any(e => e.FriendId == id);
+        }
+
+        public async Task<IActionResult> FriendWishlist(int? id)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            if (id == null)
+            {
+                _logger.LogError("Error: null id passed for friend's wishlist request.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var memberId = _loginStatus.GetMemberId();
+            var friendId = (int)id;
+
+            var friendship1 = await _context.Friend.Where(f => f.MemberId == memberId).Where(f => f.FriendMemberId == friendId).SingleOrDefaultAsync();
+            var friendship2 = await _context.Friend.Where(f => f.MemberId == friendId).Where(f => f.FriendMemberId == memberId).SingleOrDefaultAsync();
+
+            if (friendship1 == null || friendship2 == null)
+            {
+                _logger.LogError("Error: One or both friendship entries are null");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var friend = await _context.Member.Where(m => m.MemberId == id).SingleOrDefaultAsync();
+
+            var wishlist = await _context.Wishlist
+                .Include(w => w.Game)
+                .Where(w => w.MemberId == friendId)
+                .ToListAsync();
+
+            HttpContext.Session.SetString("friendName", friend.Username);
+
+            return View(wishlist);
         }
     }
 }

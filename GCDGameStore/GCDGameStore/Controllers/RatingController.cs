@@ -122,7 +122,25 @@ namespace GCDGameStore.Controllers
                     return RedirectToAction("Library", "Member");
                 }
 
+                var ratingList = await _context.Rating.Where(r => r.GameId == rating.GameId).ToListAsync();
+                var gameRated = await _context.Game.Where(g => g.GameId == rating.GameId).SingleOrDefaultAsync();
+
+                if (ratingList == null)
+                {
+                    gameRated.AverageRating = (float)rating.RatingScore;
+                }
+                else
+                {
+                    var total = ratingList.Count();
+                    var curRating = gameRated.AverageRating;
+                    var newRating = (float)rating.RatingScore;
+                    var newAverage = ((curRating * total) + newRating) / (total + 1);
+
+                    gameRated.AverageRating = newAverage;
+                }
+
                 _context.Add(rating);
+                _context.Game.Update(gameRated);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Library", "Member");
             }

@@ -40,6 +40,15 @@ namespace GCDGameStore.Controllers
             return View(await _context.Game.ToListAsync());
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchIndex(string searchText)
+        {
+            var results = await _context.Game.Where(g => g.Title.Contains(searchText)).ToListAsync();
+
+            return View("Index", results);
+        }
+
         public IActionResult Download()
         {
             return View();
@@ -189,9 +198,18 @@ namespace GCDGameStore.Controllers
                     MemberGameDetail.OnWishlist = true;
                 }
             }
-            
-            
 
+            var reviews = await _context.Review
+                                        .Where(r => r.GameId == gameId)
+                                        .Where(r => r.Approved == true)
+                                        .Include(r => r.Member)
+                                        .ToListAsync();
+
+            if (reviews != null)
+            {
+                MemberGameDetail.HasReview = true;
+                MemberGameDetail.Reviews = reviews;
+            }
 
 
             return View(MemberGameDetail);
