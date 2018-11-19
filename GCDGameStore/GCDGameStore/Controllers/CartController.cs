@@ -51,6 +51,35 @@ namespace GCDGameStore.Controllers
             return View(cartItemList);
         }
 
+        public async Task<IActionResult> Checkout()
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            if (_cart.GetCart().Count() == 0)
+            {
+                _logger.LogError("Error: Cannot checkout empty cart");
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to cart Index");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var cartList = _cart.GetCart();
+            var cartItemList = new List<CartViewModel>();
+
+            foreach (CartItem item in cartList)
+            {
+                var game = await _context.Game.Where(g => g.GameId == item.Id).FirstOrDefaultAsync();
+                var newCartViewItem = new CartViewModel(item, game);
+
+                cartItemList.Add(newCartViewItem);
+            }
+
+            return View(cartItemList);
+        }
+
 
         [HttpPost, ActionName("AddItem")]
         [ValidateAntiForgeryToken]
@@ -193,6 +222,55 @@ namespace GCDGameStore.Controllers
             _cart.UpdateCart(updatedList);
             return RedirectToAction(nameof(Index));
         }
-        
+
+        [HttpPost, ActionName("SubmitOrder")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitOrder(List<CartViewModel> cartViewModels)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            foreach (CartViewModel item in cartViewModels)
+            {
+                var newCartItem = new CartItem(item.GameId, item.Quantity);
+
+                var gameId = item.GameId;
+
+                if (await _context.Game.FindAsync(gameId) == null)
+                {
+                    return NotFound();
+                }
+
+                var LibraryItem = new Library { MemberId = _loginStatus.GetMemberId(), GameId = gameId };
+
+                Wishlist wishlistCheck = null;
+
+                try
+                {
+                    wishlistCheck = await _context.Wishlist.Where(w => w.GameId == gameId)
+                                                           .Where(w => w.MemberId == _loginStatus.GetMemberId())
+                                                           .SingleOrDefaultAsync();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Error retrieving single wishlist: {Message}", e.Message);
+                }
+
+                if (wishlistCheck != null)
+                {
+                    _context.Wishlist.Remove(wishlistCheck);
+                }
+
+                _context.Add(LibraryItem);
+            }
+
+            _cart.ClearCart();
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Library", "Member");
+        }
+
     }
 }

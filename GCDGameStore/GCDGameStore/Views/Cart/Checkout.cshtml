@@ -1,0 +1,60 @@
+﻿@model List<GCDGameStore.ViewModels.CartViewModel>
+
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+    float total = 0.0f;
+    float itemTotal = 0.0f;
+}
+
+<h2>Checkout</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"><h3>Title</h3></div>
+        <div class="col-md-2 text-right"><h3>Quantity</h3></div>
+        <div class="col-md-2 text-right"><h3>Total</h3></div>
+        <div class="col-md-4"></div>
+    </div>
+    
+    <div class="row">
+        <hr style="border-color:black;" />
+        <form asp-controller="Cart" asp-action="SubmitOrder" method="post" role="form">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <div class="row">
+                    <div class="col-md-4">@Model[i].Game.Title</div>
+                    <div class="col-md-2 text-right">@Model[i].Quantity</div>
+                    @{
+                        itemTotal = ((float)Model[i].Quantity * 1);
+                        total += itemTotal;
+                    }
+                    <div class="col-md-2 text-right">$@itemTotal</div>
+                    @Html.HiddenFor(model => Model[i].GameId)
+                    @Html.HiddenFor(model => Model[i].Quantity)
+                    <!-- Add hidden for digital/physical, and item price-->
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-4"><hr style="border-color:black;" /></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-2 text-right">Total:</div>
+                <div class="col-md-2 text-right">$@total</div>
+            </div>
+            <hr style="border-color:black;" />
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" value="Submit Order" class="btn btn-primary" />
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+
+</div>

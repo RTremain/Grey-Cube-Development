@@ -43,26 +43,23 @@
         <div class="col-md-6">
             @if (Model.InLibrary)
             {
-                <a asp-controller="MemberGame" asp-action="Download" class="btn btn-default">Download Game</a>
+                <div class="col-md-4">
+                    <a asp-controller="MemberGame" asp-action="Download" class="btn btn-primary">Download Game</a>
+                </div>
             }
             else
             {
                 <div class="col-md-4">
-                    <form asp-action="CreateLibraryItem">
-                        <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-default">Add To Library</button>
-                    </form>
-                </div>
-                <div class="col-md-4">
                     @if (Model.OnWishlist)
                     {
                         <form asp-action="DeleteWishlistItem">
-                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-default">Remove From Wishlist</button>
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-danger">Remove From Wishlist</button>
                         </form>
                     }
                     else
                     {
                         <form asp-action="CreateWishlistItem">
-                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-default">Add To Wishlist</button>
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Wishlist</button>
                         </form>
                     }
                 </div>
@@ -70,37 +67,34 @@
                     @if (!Model.OnCart)
                     {
                         <form asp-controller="Cart" asp-action="AddItem" method="post">
-                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-default">Add To Cart</button>
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Cart</button>
                         </form>
                     }
                     else
                     {
                         <form asp-controller="Cart" asp-action="DeleteItemFromGameDetails" method="post">
-                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-default">Remove From Cart</button>
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-danger">Remove From Cart</button>
                         </form>
                     }
                 </div>
-
             }
         </div>
-
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <a asp-controller="Member" asp-action="Library" class="btn btn-primary">Return To Library</a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="Member" asp-action="Wishlist" class="btn btn-primary">Return To Wishlist</a>
+            </div>
+            <div class="col-md-4">
+                <a asp-action="Index" class="btn btn-primary">Return To All Games</a>
+            </div>
+        </div>
     </div>
 </div>
-
-<hr />
-<div class="row">
-    <div class="col-md-2">
-        <a asp-controller="Member" asp-action="Library" class="btn btn-default">Return To Library</a>
-    </div>
-    <div class="col-md-2">
-        <a asp-controller="Member" asp-action="Wishlist" class="btn btn-default">Return To Wishlist</a>
-    </div>
-    <div class="col-md-2">
-        <a asp-action="Index" class="btn btn-default">Return To All Games</a>
-    </div>
-    <div class="col-md-6"></div>
-</div>
-
 @if (Model.HasReview)
 {
 

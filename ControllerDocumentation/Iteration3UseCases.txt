@@ -13,6 +13,7 @@ GCD - Iteration 3 Use Cases
 45 View cart - Done
 46 Edit cart - Done
 35 Delete from cart - Done
+36 Check out - Done
 
 11 Publish review - Done
 41 View pending reviews - Done
@@ -30,10 +31,11 @@ Game views show reviews and ratings - Done
 
 --------------------------------------------------------
 
-17 Reset password
+37 Submit order - Done, pending further expansion
 
-36 Check out
-37 Submit order
+--------------------------------------------------------
+
+17 Reset password
 
 43 View pending shipments
 13 Update status of ship
@@ -43,6 +45,9 @@ Game views show reviews and ratings - Done
 --------------------------------------------------------
 
 Reports need live data
+Member sets favourite platforms and genres
+Games need individual prices
+Games need digital/physical designation
 
 --------------------------------------------------------
 
