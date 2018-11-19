@@ -74,10 +74,11 @@ namespace GCDGameStore.Controllers
                 return View("ResetPassword", null);
             }
 
+            // hash will be made from both a generated salt to be the password, and another salt to be the salt
             var verification = new ResetPasswordVerify
             {
                 MemberId = member.MemberId,
-                VerificationHash = WebUtility.UrlEncode(AccountHashing.GenHash("reset", AccountHashing.GenSalt()))
+                VerificationHash = WebUtility.UrlEncode(AccountHashing.GenHash(Convert.ToBase64String(AccountHashing.GenSalt()), AccountHashing.GenSalt()))
             };
 
             string body = "Click the following link: https://localhost:5001/Member/ResetPasswordEmail?request=" 
