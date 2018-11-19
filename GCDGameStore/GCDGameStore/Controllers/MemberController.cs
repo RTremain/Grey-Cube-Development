@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using GCDGameStore.Classes;
 using GCDGameStore.ViewModels;
 using System.Collections;
+using System.Net;
 
 namespace GCDGameStore.Controllers
 {
@@ -22,13 +23,15 @@ namespace GCDGameStore.Controllers
         private readonly ILogger _logger;
         private readonly LoginStatus _loginStatus;
         private readonly Cart _cart;
+        private readonly IEmailSender _emailSender;
 
-        public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger, IHttpContextAccessor accessor)
+        public MemberController(GcdGameStoreContext context, ILogger<MemberController> logger, IHttpContextAccessor accessor, IEmailSender emailSender)
         {
             _context = context;
             _logger = logger;
             _loginStatus = new LoginStatus(accessor);
             _cart = new Cart(accessor, logger);
+            _emailSender = emailSender;
         }
 
         // GET: Member
@@ -45,6 +48,144 @@ namespace GCDGameStore.Controllers
             }
 
             return RedirectToAction("Login", "Employee");
+        }
+
+
+        public IActionResult ResetPassword()
+        {
+            HttpContext.Session.SetString("Error", "");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordConfirm(string email)
+        {
+            if (!_loginStatus.IsNotLoggedIn())
+            {
+                return RedirectToAction(nameof(Details));
+            }
+
+            var member = await _context.Member.Where(m => m.Email == email).SingleOrDefaultAsync();
+
+            if (member == null)
+            {
+                HttpContext.Session.SetString("Error", "Email not found.");
+                return View("ResetPassword", null);
+            }
+
+            var verification = new ResetPasswordVerify
+            {
+                MemberId = member.MemberId,
+                VerificationHash = WebUtility.UrlEncode(AccountHashing.GenHash("reset", AccountHashing.GenSalt()))
+            };
+
+            string body = "Click the following link: https://localhost:5001/Member/ResetPasswordEmail?request=" 
+                + verification.VerificationHash;
+
+            _context.Add(verification);
+            await _context.SaveChangesAsync();
+            await _emailSender.SendEmailAsync(email, "Reset Password", body);
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult>ResetPasswordEmail()
+        {
+            string verificationHash = Uri.EscapeDataString(HttpContext.Request.Query["request"].ToString());
+
+            if (verificationHash == null || verificationHash == "")
+            {
+                _logger.LogError("Error: No hash given.");
+                return RedirectToAction("Index", "Home");
+            }
+
+            var requestVerify = await _context.ResetPasswordVerify
+                .Where(r => r.VerificationHash == verificationHash)
+                .SingleOrDefaultAsync();
+
+            if (requestVerify == null)
+            {
+                _logger.LogError("Error: Request hash not found.");
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (verificationHash == requestVerify.VerificationHash)
+            {
+                _loginStatus.MemberReset(requestVerify.MemberId.ToString());
+                HttpContext.Session.SetString("Error", "");
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordEmail(string newPassword, string newPasswordConfirm)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction(nameof(Login));
+            }
+
+            var memberId = _loginStatus.GetMemberId();
+            var member = await _context.Member.Where(m => m.MemberId == memberId).SingleOrDefaultAsync();
+            var verifyReset = await _context.ResetPasswordVerify.Where(m => m.MemberId == memberId).SingleOrDefaultAsync();
+
+            if (!_loginStatus.MemberIsResetting())
+            {
+                _logger.LogError("Error: {message}", "Invalid member attempting reset.");
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (verifyReset == null)
+            {
+                _logger.LogError("Error: {message}", "No password reset entry found.");
+                return RedirectToAction("Index", "Home");
+            }
+
+                // compare new password entries
+            if (newPassword == newPasswordConfirm)
+            {
+                // if they match, generate new salt, store new salt and store hashed new password
+
+                var newSalt = AccountHashing.GenSalt();
+                var newHash = AccountHashing.GenHash(newPassword, newSalt);
+
+                member.PwSalt = Convert.ToBase64String(newSalt);
+                member.PwHash = newHash;
+
+                try
+                {
+                    _context.Update(member);
+                    _context.ResetPasswordVerify.Remove(verifyReset);
+                    await _context.SaveChangesAsync();
+
+                    _loginStatus.MemberLogin(member.MemberId.ToString());
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MemberExists(member.MemberId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Details));
+            }
+            else
+            {
+                HttpContext.Session.SetString("Error", "New passwords do not match");
+
+            }
+            
+            return View();
         }
 
         public async Task<IActionResult> Library()
@@ -467,6 +608,16 @@ namespace GCDGameStore.Controllers
                 {
                     HttpContext.Session.SetString("Error", "Username already exists.");
                     user.Username = "";
+                    return View(user);
+                }
+
+                memberCheck = await _context.Member.AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Email == user.Email);
+
+                if (memberCheck != null)
+                {
+                    HttpContext.Session.SetString("Error", "Email already in use.");
+                    user.Email = "";
                     return View(user);
                 }
 

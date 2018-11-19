@@ -29,6 +29,7 @@ namespace GCDGameStore.Models
         public virtual DbSet<Attendance> Attendance { get; set; }
         public DbSet<Review> Review { get; set; }
         public DbSet<Rating> Rating { get; set; }
+        public DbSet<ResetPasswordVerify> ResetPasswordVerify {get; set;}
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +44,7 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<CreditCard>().ToTable("CreditCard");
             modelBuilder.Entity<Review>().ToTable("Review");
             modelBuilder.Entity<Rating>().ToTable("Rating");
+            modelBuilder.Entity<ResetPasswordVerify>().ToTable("ResetPasswordVerify");
 
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.Event)

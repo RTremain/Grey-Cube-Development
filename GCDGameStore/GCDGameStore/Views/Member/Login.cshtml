@@ -25,14 +25,15 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-default" />
+                <input type="submit" value="Login" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Register">Register New Account</a>
+    <a asp-action="Register" class="btn btn-default">Register New Account</a>
+    <a asp-action="ResetPassword" class="btn btn-default">Forgot Password?</a>
 </div>
 
 @section Scripts {

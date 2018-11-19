@@ -6,6 +6,7 @@ GCD - Iteration 3 Use Cases
 15 Log In - Done
 40 Log out - Done
 18 Change Password - Done
+17 Reset password - Done
 
 24 Search games - Done
 
@@ -35,8 +36,6 @@ Game views show reviews and ratings - Done
 
 --------------------------------------------------------
 
-17 Reset password
-
 43 View pending shipments
 13 Update status of ship
 
@@ -53,3 +52,4 @@ Games need digital/physical designation
 
 Log 5.5 hours for 11/16
 Log 5 hours for 11/17
+Log 5 hours for 11/18

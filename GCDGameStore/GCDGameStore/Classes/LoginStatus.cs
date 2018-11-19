@@ -39,6 +39,21 @@ namespace GCDGameStore.Classes
             httpContext.Session.SetString(MEMBER_ID, memberId);
         }
 
+        public void MemberReset(string memberId)
+        {
+            var httpContext = _accessor.HttpContext;
+
+            httpContext.Session.SetString(LOGIN, "reset");
+            httpContext.Session.SetString(MEMBER_ID, memberId);
+        }
+
+        public bool MemberIsResetting()
+        {
+            var httpContext = _accessor.HttpContext;
+
+            return httpContext.Session.GetString(LOGIN) == "reset";
+        }
+
         public void MemberLogout()
         {
             var httpContext = _accessor.HttpContext;
