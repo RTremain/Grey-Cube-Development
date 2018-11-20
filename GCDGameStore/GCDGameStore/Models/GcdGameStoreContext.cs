@@ -27,11 +27,15 @@ namespace GCDGameStore.Models
         public virtual DbSet<CreditCard> CreditCard { get; set; }
         public virtual DbSet<Friend> Friend { get; set; }
         public virtual DbSet<Attendance> Attendance { get; set; }
-        public DbSet<Review> Review { get; set; }
-        public DbSet<Rating> Rating { get; set; }
-        public DbSet<ResetPasswordVerify> ResetPasswordVerify {get; set;}
-        public DbSet<Shipment> Shipment { get; set; }
-        public DbSet<ShipItem> ShipItem { get; set; }
+        public virtual DbSet<Review> Review { get; set; }
+        public virtual DbSet<Rating> Rating { get; set; }
+        public virtual DbSet<ResetPasswordVerify> ResetPasswordVerify {get; set;}
+        public virtual DbSet<Shipment> Shipment { get; set; }
+        public virtual DbSet<ShipItem> ShipItem { get; set; }
+        public virtual DbSet<Platform> Platform { get; set; }
+        public virtual DbSet<Genre> Genre { get; set; }
+        public virtual DbSet<MemberPlatform> MemberPlatform { get; set; }
+        public virtual DbSet<MemberGenre> MemberGenre { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +51,11 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Review>().ToTable("Review");
             modelBuilder.Entity<Rating>().ToTable("Rating");
             modelBuilder.Entity<ResetPasswordVerify>().ToTable("ResetPasswordVerify");
+
+            modelBuilder.Entity<Platform>().ToTable("Platform");
+            modelBuilder.Entity<Genre>().ToTable("Genre");
+            modelBuilder.Entity<MemberPlatform>().ToTable("MemberPlatform");
+            modelBuilder.Entity<MemberGenre>().ToTable("MemberGenre");
 
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.Event)
@@ -82,5 +91,11 @@ namespace GCDGameStore.Models
 
             
         }
+
+
+        public DbSet<GCDGameStore.ViewModels.MemberPlatformViewModel> MemberPlatformViewModel { get; set; }
+
+
+        public DbSet<GCDGameStore.ViewModels.MemberGenreViewModel> MemberGenreViewModel { get; set; }
     }
 }

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<GCDGameStore.ViewModels.MemberGenreViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>Favourite Genres</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Added)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (item.Added)
+                {
+                    <form asp-action="Delete">
+                        <button type="submit" name="genreId" value="@item.MemberGenreViewModelId" class="btn btn-danger">Remove Favourite</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Create">
+                        <button type="submit" name="genreId" value="@item.MemberGenreViewModelId" class="btn btn-primary">Add Favourite</button>
+                    </form>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

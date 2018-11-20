@@ -34,15 +34,16 @@ GCD - Iteration 3 Use Cases
  - Done
 
 Game views show reviews and ratings - Done
+Member sets favourite platforms - Done
+Member sets favourite genres - Done
 
 --------------------------------------------------------
 
-37 Submit order - Done, pending further expansion
+37 Submit order - Done, pending connection with shipments
 
 --------------------------------------------------------
 
 Reports need live data
-Member sets favourite platforms and genres
 Games need individual prices
 Games need digital/physical designation
 
@@ -52,3 +53,4 @@ Log 5.5 hours for 11/16
 Log 5 hours for 11/17
 Log 5 hours for 11/18
 Log 3 hours for 11/19
+Log 2 hours for 11/20

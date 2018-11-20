@@ -298,6 +298,56 @@ namespace GCDGameStore.Data
                 }
             }
 
+            if (!context.Platform.Any())
+            {
+                var platforms = new Platform[]
+                {
+                    new Platform { Name = "PSX" },
+                    new Platform { Name = "N64" },
+                    new Platform { Name = "Xbox" },
+                    new Platform { Name = "PS2" },
+                    new Platform { Name = "Wii" },
+                    new Platform { Name = "Xbox 360" },
+                    new Platform { Name = "PS3" },
+                    new Platform { Name = "Wii U" },
+                    new Platform { Name = "Xbox One" },
+                    new Platform { Name = "PS4" },
+                    new Platform { Name = "Switch" },
+                    new Platform { Name = "Android" },
+                    new Platform { Name = "iOS" },
+                    new Platform { Name = "PC" },
+                    new Platform { Name = "Linux" }
+                };
+
+                foreach (Platform item in platforms)
+                {
+                    context.Platform.Add(item);
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.Genre.Any())
+            {
+                var genres = new Genre[]
+                {
+                    new Genre { Name = "Action" },
+                    new Genre { Name = "Adventure" },
+                    new Genre { Name = "RPG" },
+                    new Genre { Name = "Shooter" },
+                    new Genre { Name = "Platformer" },
+                    new Genre { Name = "Puzzle" },
+                    new Genre { Name = "MMO" }
+                };
+
+                foreach (Genre g in genres)
+                {
+                    context.Genre.Add(g);
+                }
+
+                context.SaveChanges();
+            }
+
         } // End Initialize()
     }
 }
