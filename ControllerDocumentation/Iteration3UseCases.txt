@@ -16,6 +16,11 @@ GCD - Iteration 3 Use Cases
 35 Delete from cart - Done
 36 Check out - Done
 
+43 View pending shipments - Done
+13 Update status of ship
+
+ - Done
+
 11 Publish review - Done
 41 View pending reviews - Done
 42 Reject review
@@ -36,13 +41,6 @@ Game views show reviews and ratings - Done
 
 --------------------------------------------------------
 
-43 View pending shipments
-13 Update status of ship
-
-
-
---------------------------------------------------------
-
 Reports need live data
 Member sets favourite platforms and genres
 Games need individual prices
@@ -53,3 +51,4 @@ Games need digital/physical designation
 Log 5.5 hours for 11/16
 Log 5 hours for 11/17
 Log 5 hours for 11/18
+Log 3 hours for 11/19

@@ -138,7 +138,7 @@ namespace GCDGameStore.Controllers
 
                 if (testHash == employeeCheck.PwHash)
                 {
-                    _loginStatus.EmployeeLogin();
+                    _loginStatus.EmployeeLogin(employeeCheck.EmployeeId.ToString());
                     return RedirectToAction(nameof(LoginSuccess));
                 }
                 HttpContext.Session.SetString("Error", "Invalid username or password.");

@@ -75,10 +75,12 @@ namespace GCDGameStore.Data
                 context.SaveChanges();
             }
 
+            var jalapegnome = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+
             if (!context.Library.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                
+                if (jalapegnome != null)
                 {
                     int[] gameIds = new int[2];
                     var gameList = context.Game.ToList();
@@ -87,8 +89,8 @@ namespace GCDGameStore.Data
                     {
                         var libraryGames = new Library[]
                         {
-                            new Library { MemberId = memberId.MemberId, GameId = gameList[0].GameId },
-                            new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
+                            new Library { MemberId = jalapegnome.MemberId, GameId = gameList[0].GameId },
+                            new Library { MemberId = jalapegnome.MemberId, GameId = gameList[1].GameId }
                         };
 
                         foreach (Library l in libraryGames)
@@ -104,8 +106,7 @@ namespace GCDGameStore.Data
 
             if (!context.Wishlist.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                if (jalapegnome != null)
                 {
                     int[] gameIds = new int[2];
                     var gameList = context.Game.ToList();
@@ -114,8 +115,8 @@ namespace GCDGameStore.Data
                     {
                         var wishlistGames = new Wishlist[]
                         {
-                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[2].GameId },
-                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[3].GameId }
+                            new Wishlist { MemberId = jalapegnome.MemberId, GameId = gameList[2].GameId },
+                            new Wishlist { MemberId = jalapegnome.MemberId, GameId = gameList[3].GameId }
                         };
 
                         foreach (Wishlist w in wishlistGames)
@@ -131,8 +132,8 @@ namespace GCDGameStore.Data
 
             if (!context.CreditCard.Any())
             {
-                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (member != null)
+                
+                if (jalapegnome != null)
                 {
                     var creditCards = new CreditCard[]
                     {
@@ -146,7 +147,7 @@ namespace GCDGameStore.Data
                             City = "Waterloo",
                             Province = "Ontario",
                             PostalCode = "A1B 2C3",
-                            MemberId = member.MemberId
+                            MemberId = jalapegnome.MemberId
                         },
                         new CreditCard
                         {
@@ -158,7 +159,7 @@ namespace GCDGameStore.Data
                             City = "Waterloo",
                             Province = "Ontario",
                             PostalCode = "A1B 2C3",
-                            MemberId = member.MemberId
+                            MemberId = jalapegnome.MemberId
                         }
                     };
 
@@ -172,7 +173,6 @@ namespace GCDGameStore.Data
 
             if (!context.Friend.Any())
             {
-                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
                 var friends = new Member[]
                 {
                     context.Member.FirstOrDefault(m => m.Username == "Pyrogue"),
@@ -180,18 +180,18 @@ namespace GCDGameStore.Data
                     context.Member.FirstOrDefault(m => m.Username == "AdviceBoulder")
                 };
 
-                if (member != null)
+                if (jalapegnome != null)
                 {
 
                     
                     var friendlist = new Friend[]
                     {
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[0].MemberId },
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[1].MemberId },
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[2].MemberId },
-                        new Friend { MemberId = friends[0].MemberId, FriendMemberId = member.MemberId },
-                        new Friend { MemberId = friends[1].MemberId, FriendMemberId = member.MemberId },
-                        new Friend { MemberId = friends[2].MemberId, FriendMemberId = member.MemberId }
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[0].MemberId },
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[1].MemberId },
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[2].MemberId },
+                        new Friend { MemberId = friends[0].MemberId, FriendMemberId = jalapegnome.MemberId },
+                        new Friend { MemberId = friends[1].MemberId, FriendMemberId = jalapegnome.MemberId },
+                        new Friend { MemberId = friends[2].MemberId, FriendMemberId = jalapegnome.MemberId }
 
                     };
 
@@ -228,8 +228,7 @@ namespace GCDGameStore.Data
 
             if (!context.Attendance.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                if (jalapegnome != null)
                 {
                     var eventList = context.Event.ToList();
 
@@ -237,8 +236,8 @@ namespace GCDGameStore.Data
                     {
                         var attendanceList = new Attendance[]
                         {
-                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[0].EventId },
-                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[1].EventId }
+                            new Attendance { MemberId = jalapegnome.MemberId, EventId = eventList[0].EventId },
+                            new Attendance { MemberId = jalapegnome.MemberId, EventId = eventList[1].EventId }
                         };
 
                         foreach (Attendance a in attendanceList)
@@ -250,6 +249,53 @@ namespace GCDGameStore.Data
 
                 }
 
+            }
+
+            if (!context.Shipment.Any())
+            {
+                if (jalapegnome != null)
+                {
+                    var shipments = new Shipment[]
+                    {
+                        new Shipment { OrderDate = new DateTime(2018, 11, 12, 19, 30, 12), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false },
+                        new Shipment { OrderDate = new DateTime(2018, 11, 14, 12, 44, 35), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false },
+                        new Shipment { OrderDate = new DateTime(2018, 11, 16, 15, 16, 43), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false }
+
+                    };
+
+                    foreach (Shipment s in shipments)
+                    {
+                        context.Shipment.Add(s);
+                    }
+
+                    context.SaveChanges();
+                }
+
+            }
+
+            if (!context.ShipItem.Any())
+            {
+                var shipmentList = context.Shipment.ToList();
+
+                if (shipmentList.Count >= 3)
+                {
+                    var shipItems = new ShipItem[]
+                    {
+                        new ShipItem { GameId = 1, Quantity = 2, ShipmentId = shipmentList[0].ShipmentId },
+                        new ShipItem { GameId = 3, Quantity = 1, ShipmentId = shipmentList[0].ShipmentId },
+                        new ShipItem { GameId = 2, Quantity = 1, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 4, Quantity = 3, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 5, Quantity = 5, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 6, Quantity = 1, ShipmentId = shipmentList[2].ShipmentId }
+                    };
+
+                    foreach (ShipItem s in shipItems)
+                    {
+                        context.ShipItem.Add(s);
+                    }
+
+                    context.SaveChanges();
+                }
             }
 
         } // End Initialize()

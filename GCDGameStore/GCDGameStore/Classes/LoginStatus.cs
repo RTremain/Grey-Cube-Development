@@ -12,6 +12,7 @@ namespace GCDGameStore.Classes
         private const string MEMBER_ID = "MemberId";
         private const string LOGIN = "Login";
         private const string EMPLOYEE_LOGIN = "EmployeeLogin";
+        private const string EMPLOYEE_ID = "EmployeeId";
 
         public LoginStatus (IHttpContextAccessor accessor)
         {
@@ -91,16 +92,36 @@ namespace GCDGameStore.Classes
             return false;
         }
 
-        public void EmployeeLogin()
+        public void EmployeeLogin(string employeeId)
         {
             var httpContext = _accessor.HttpContext;
             httpContext.Session.SetString(EMPLOYEE_LOGIN, "true");
+            httpContext.Session.SetString(EMPLOYEE_ID, employeeId);
         }
 
         public void EmployeeLogout()
         {
             var httpContext = _accessor.HttpContext;
             httpContext.Session.SetString(EMPLOYEE_LOGIN, "false");
+            httpContext.Session.SetString(EMPLOYEE_ID, "");
+        }
+
+
+        /// <summary>
+        ///     Returns an int of the employeeId, if session value is null or empty, returns -1 instead.
+        /// </summary>
+        /// <returns></returns>
+        public int GetEmployeeId()
+        {
+            var httpContext = _accessor.HttpContext;
+            var employeeId = httpContext.Session.GetString(EMPLOYEE_ID);
+
+            if (employeeId != null && employeeId != "")
+            {
+                return Convert.ToInt32(employeeId);
+            }
+
+            return -1;
         }
     }
 }

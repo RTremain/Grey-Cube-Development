@@ -30,6 +30,8 @@ namespace GCDGameStore.Models
         public DbSet<Review> Review { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<ResetPasswordVerify> ResetPasswordVerify {get; set;}
+        public DbSet<Shipment> Shipment { get; set; }
+        public DbSet<ShipItem> ShipItem { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,6 +53,20 @@ namespace GCDGameStore.Models
                 .WithMany(e => e.Attendees)
                 .HasForeignKey(a => a.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ShipItem>()
+                .HasOne(si => si.Shipment)
+                .WithMany(s => s.ShipItems)
+                .HasForeignKey(si => si.ShipmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Shipment>()
+                .HasOne(s => s.Employee)
+                .WithMany(e => e.Shipments)
+                .HasForeignKey(s => s.EmployeeId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+            
 
             modelBuilder.Entity<Friend>()
                 .HasOne(f => f.Member)
