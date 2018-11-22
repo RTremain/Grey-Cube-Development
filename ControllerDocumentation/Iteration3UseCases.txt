@@ -44,13 +44,15 @@ Member sets favourite genres - Done
 --------------------------------------------------------
 
 Reports need live data
+
 Games need individual prices
 Games need digital/physical designation
 
---------------------------------------------------------
+Games have different physical and digital prices
+All games have a digital version, not all games have a physical option
+If digital, only one copy is purchased
+If physical option is selected, quantity can be decided
+Order table will record whole order
+Shipping will record only physical copies
 
-Log 5.5 hours for 11/16
-Log 5 hours for 11/17
-Log 5 hours for 11/18
-Log 3 hours for 11/19
-Log 2 hours for 11/20
+--------------------------------------------------------
