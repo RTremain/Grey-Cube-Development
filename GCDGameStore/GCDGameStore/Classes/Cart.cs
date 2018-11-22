@@ -94,9 +94,9 @@ namespace GCDGameStore.Classes
             return cartList.Any(c => c.Id == id);
         }
 
-        public void AddItem(int id, int quantity)
+        public void AddItem(int id, int quantity, bool physical)
         {
-            var cartItem = new CartItem(id, quantity);
+            var cartItem = new CartItem(id, quantity, physical);
 
             cartList.Add(cartItem);
 
@@ -145,14 +145,17 @@ namespace GCDGameStore.Classes
 
     public struct CartItem
     {
-        public CartItem(int id, int quantity)
+        public CartItem(int id, int quantity, bool physical)
         {
             Id = id;
             Quantity = quantity;
+            Physical = physical;
         }
 
         public int Id { get; set; }
 
         public int Quantity { get; set; }
+
+        public bool Physical { get; set; }
     }
 }

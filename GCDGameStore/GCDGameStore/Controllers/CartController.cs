@@ -106,7 +106,7 @@ namespace GCDGameStore.Controllers
             {
                 if (!_cart.OnCart(id))
                 {
-                    _cart.AddItem(id, 1);
+                    _cart.AddItem(id, 1, false);
                 }
                 else
                 {
@@ -215,7 +215,7 @@ namespace GCDGameStore.Controllers
             var updatedList = new List<CartItem>();
             foreach (CartViewModel item in cartViewModels)
             {
-                var newCartItem = new CartItem(item.GameId, item.Quantity);
+                var newCartItem = new CartItem(item.GameId, item.Quantity, false);
                 updatedList.Add(newCartItem);
             }
 
@@ -235,7 +235,7 @@ namespace GCDGameStore.Controllers
 
             foreach (CartViewModel item in cartViewModels)
             {
-                var newCartItem = new CartItem(item.GameId, item.Quantity);
+                var newCartItem = new CartItem(item.GameId, item.Quantity, false);
 
                 var gameId = item.GameId;
 

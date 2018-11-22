@@ -34,14 +34,14 @@ namespace GCDGameStore.Data
 
                 var games = new Game[]
                 {
-                    new Game { Title = "Doom", ReleaseDate = new DateTime(2016, 5, 13) },
-                    new Game { Title = "Monster Hunter: World", ReleaseDate = new DateTime(2018, 8, 9) },
-                    new Game { Title = "Starcraft 2", ReleaseDate = new DateTime(2010, 7, 10) },
-                    new Game { Title = "Call of Duty: Modern Warfare", ReleaseDate = new DateTime(2007, 11, 7) },
-                    new Game { Title = "The Elder Scrolls V: Skyrim", ReleaseDate = new DateTime(2011, 11, 11) },
-                    new Game { Title = "Minecraft", ReleaseDate = new DateTime(2009, 5, 17) },
-                    new Game { Title = "Battlefield 3", ReleaseDate = new DateTime(2011, 10, 25) },
-                    new Game { Title = "Fallout 4", ReleaseDate = new DateTime(2015, 11, 10) }
+                    new Game { Title = "Doom", ReleaseDate = new DateTime(2016, 5, 13), DigitalPrice = 40.0f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Monster Hunter: World", ReleaseDate = new DateTime(2018, 8, 9), DigitalPrice = 35.99f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Starcraft 2", ReleaseDate = new DateTime(2010, 7, 10), DigitalPrice = 22.45f, PhysicalAvailable = true, PhysicalPrice = 27.45f },
+                    new Game { Title = "Call of Duty: Modern Warfare", ReleaseDate = new DateTime(2007, 11, 7), DigitalPrice = 19.85f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "The Elder Scrolls V: Skyrim", ReleaseDate = new DateTime(2011, 11, 11), DigitalPrice = 29.99f, PhysicalAvailable = true, PhysicalPrice = 39.99f },
+                    new Game { Title = "Minecraft", ReleaseDate = new DateTime(2009, 5, 17), DigitalPrice = 39.99f, PhysicalAvailable = true, PhysicalPrice = 49.99f },
+                    new Game { Title = "Battlefield 3", ReleaseDate = new DateTime(2011, 10, 25), DigitalPrice = 50.22f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Fallout 4", ReleaseDate = new DateTime(2015, 11, 10), DigitalPrice = 49.99f, PhysicalAvailable = false, PhysicalPrice = null }
                 };
 
                 foreach (Game g in games)

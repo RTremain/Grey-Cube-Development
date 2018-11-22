@@ -45,13 +45,18 @@ Member sets favourite genres - Done
 
 Reports need live data
 
-Games need individual prices
-Games need digital/physical designation
-
-Games have different physical and digital prices
-All games have a digital version, not all games have a physical option
+Games have different physical and digital prices - Done
+All games have a digital version, not all games have a physical option - Done
 If digital, only one copy is purchased
 If physical option is selected, quantity can be decided
+
+Fixt cart.additem and new cartItems in cart controller
+Game page will have add to cart button for each option
+After one is selected, there will only be one remove from cart button
+
+Cart will only allow changing quantity for physical selected games
+Cart will not be able to change game type between digital/physical
+
 Order table will record whole order
 Shipping will record only physical copies
 
