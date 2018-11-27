@@ -15,6 +15,9 @@ namespace GCDGameStore.ViewModels
             MemberGameDetailId = game.GameId;
             Title = game.Title;
             ReleaseDate = game.ReleaseDate;
+            DigitalPrice = game.DigitalPrice;
+            PhysicalAvailable = game.PhysicalAvailable;
+            PhysicalPrice = game.PhysicalPrice;
 
             InLibrary = false;
             OnWishlist = false;
@@ -33,6 +36,10 @@ namespace GCDGameStore.ViewModels
         public string Title { get; set; }
 
         public DateTime ReleaseDate { get; set; }
+
+        public float DigitalPrice { get; set; }
+        public bool PhysicalAvailable { get; set; }
+        public float? PhysicalPrice { get; set; }
 
         public bool InLibrary { get; set; }
         public bool OnWishlist { get; set; }

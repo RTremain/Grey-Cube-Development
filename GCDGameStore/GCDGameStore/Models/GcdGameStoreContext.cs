@@ -36,6 +36,9 @@ namespace GCDGameStore.Models
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<MemberPlatform> MemberPlatform { get; set; }
         public virtual DbSet<MemberGenre> MemberGenre { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderItemDigital> OrderItemDigital { get; set; }
+        public virtual DbSet<OrderItemPhysical> OrderItemPhysical { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,6 +59,7 @@ namespace GCDGameStore.Models
             modelBuilder.Entity<Genre>().ToTable("Genre");
             modelBuilder.Entity<MemberPlatform>().ToTable("MemberPlatform");
             modelBuilder.Entity<MemberGenre>().ToTable("MemberGenre");
+            modelBuilder.Entity<Order>().ToTable("Order");
 
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.Event)
@@ -89,7 +93,19 @@ namespace GCDGameStore.Models
                 .HasForeignKey(f => f.FriendMemberId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+            modelBuilder.Entity<OrderItemPhysical>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.PhysicalItems)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderItemDigital>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.DigitalItems)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
         }
 
 

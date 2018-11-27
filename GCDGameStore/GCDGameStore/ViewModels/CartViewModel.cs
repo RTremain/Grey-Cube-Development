@@ -16,7 +16,16 @@ namespace GCDGameStore.ViewModels
         {
             Quantity = cartItem.Quantity;
             GameId = cartItem.Id;
+            IsPhysical = cartItem.Physical;
             Game = game;
+            if (IsPhysical)
+            {
+                Price = (float)Game.PhysicalPrice;
+            }
+            else
+            {
+                Price = Game.DigitalPrice;
+            }
         }
 
         public int CartViewModelId { get; set; }
@@ -27,6 +36,8 @@ namespace GCDGameStore.ViewModels
 
         public int GameId { get; set; }
         public Game Game { get; set; }
+        public bool IsPhysical { get; set; }
+        public float Price { get; set; }
 
 
     }

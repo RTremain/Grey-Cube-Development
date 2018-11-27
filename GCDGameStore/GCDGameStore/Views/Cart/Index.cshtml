@@ -19,11 +19,26 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <div class="row" style="height: 40px;">
-                        <div class="col-md-9">@Model[i].Game.Title</div>
-                        <div class="col-md-3">
-                            @Html.HiddenFor(model => Model[i].GameId)
-                            <input asp-for="@Model[i].Quantity" value="@Model[i].Quantity" type="number" min="1" max="9999" class="form-control" />
-                        </div>
+                        <div class="col-md-6">@Model[i].Game.Title</div>
+                        <div class="col-md-3">$@Model[i].Price</div>
+                        @if (Model[i].IsPhysical)
+	                    {
+                            <div class="col-md-3">
+                                @Html.HiddenFor(model => Model[i].GameId)
+                                @Html.HiddenFor(model => Model[i].IsPhysical)
+                                <input asp-for="@Model[i].Quantity" value="@Model[i].Quantity" type="number" min="1" max="9999" class="form-control" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                Digital
+                                @Html.HiddenFor(model => Model[i].GameId)
+                                @Html.HiddenFor(model => Model[i].IsPhysical)
+                                @Html.HiddenFor(model => Model[i].Quantity)
+                            </div>
+                        }
+
                     </div>
                 }
 

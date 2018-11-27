@@ -121,6 +121,55 @@ namespace GCDGameStore.Controllers
             return RedirectToAction("Details", "MemberGame", new { id });
         }
 
+        [HttpPost, ActionName("AddPhysicalItem")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPhysicalItem(string GameId)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            if (GameId == null || GameId == "")
+            {
+                _logger.LogError("Error: {Message}", "null ID supplied to cart AddItem");
+                return RedirectToAction("Index", "MemberGame");
+            }
+
+            var id = Convert.ToInt32(GameId);
+
+            // make sure id exists as a game
+            var gameCheck = await _context.Game.Where(g => g.GameId == id).SingleOrDefaultAsync();
+
+            if (gameCheck != null)
+            {
+                if (gameCheck.PhysicalAvailable)
+                {
+                    if (!_cart.OnCart(id))
+                    {
+                        _cart.AddItem(id, 1, true);
+                    }
+                    else
+                    {
+                        _logger.LogError("Error: {Message}", "Item already on cart");
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Error: {Message}", "Item already on cart");
+                }
+
+                
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Details", "MemberGame", new { id });
+        }
+
         [HttpPost, ActionName("DeleteItemFromGameDetails")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteItemFromGameDetails(string GameId)
@@ -215,7 +264,7 @@ namespace GCDGameStore.Controllers
             var updatedList = new List<CartItem>();
             foreach (CartViewModel item in cartViewModels)
             {
-                var newCartItem = new CartItem(item.GameId, item.Quantity, false);
+                var newCartItem = new CartItem(item.GameId, item.Quantity, item.IsPhysical);
                 updatedList.Add(newCartItem);
             }
 
@@ -233,9 +282,32 @@ namespace GCDGameStore.Controllers
                 return RedirectToAction("Login", "Member");
             }
 
+            if (cartViewModels == null)
+            {
+                _logger.LogError("Error: {Message}", "null cart given to SubmitOrder");
+                return NotFound();
+            }
+
+            var newShipment = new Shipment()
+            {
+                OrderDate = DateTime.Now,
+                MemberId = _loginStatus.GetMemberId(),
+                IsShipped = false,
+                IsProcessing = false,
+                ShipItems = new List<ShipItem>()
+            };
+
+            var newOrder = new Order()
+            {
+                OrderDate = DateTime.Now,
+                MemberId = _loginStatus.GetMemberId(),
+                DigitalItems = new List<OrderItemDigital>(),
+                PhysicalItems = new List<OrderItemPhysical>()
+            };
+
             foreach (CartViewModel item in cartViewModels)
             {
-                var newCartItem = new CartItem(item.GameId, item.Quantity, false);
+                var newCartItem = new CartItem(item.GameId, item.Quantity, item.IsPhysical);
 
                 var gameId = item.GameId;
 
@@ -243,6 +315,40 @@ namespace GCDGameStore.Controllers
                 {
                     return NotFound();
                 }
+
+                if (item.IsPhysical)
+                {
+                    var newShipItem = new ShipItem()
+                    {
+                        GameId = item.GameId,
+                        Quantity = item.Quantity,
+                        Shipment = newShipment
+                    };
+                    newShipment.ShipItems.Add(newShipItem);
+
+                    var newOrderItemPhysical = new OrderItemPhysical()
+                    {
+                        GameId = item.GameId,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        Order = newOrder
+                    };
+
+                    newOrder.PhysicalItems.Add(newOrderItemPhysical);
+                }
+                else
+                {
+                    var newOrderItemDigital = new OrderItemDigital()
+                    {
+                        GameId = item.GameId,
+                        Price = item.Price,
+                        Order = newOrder
+                    };
+
+                    newOrder.DigitalItems.Add(newOrderItemDigital);
+                }
+                
+
 
                 var LibraryItem = new Library { MemberId = _loginStatus.GetMemberId(), GameId = gameId };
 
@@ -268,6 +374,8 @@ namespace GCDGameStore.Controllers
             }
 
             _cart.ClearCart();
+            _context.Shipment.Add(newShipment);
+            _context.Order.Add(newOrder);
             await _context.SaveChangesAsync();
             return RedirectToAction("Library", "Member");
         }

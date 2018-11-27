@@ -15,6 +15,7 @@ GCD - Iteration 3 Use Cases
 46 Edit cart - Done
 35 Delete from cart - Done
 36 Check out - Done
+37 Submit order - Done
 
 43 View pending shipments - Done
 13 Update status of ship
@@ -39,25 +40,28 @@ Member sets favourite genres - Done
 
 --------------------------------------------------------
 
-37 Submit order - Done, pending connection with shipments
+Games have different physical and digital prices - Done
+All games have a digital version, not all games have a physical option - Done
+If digital, only one copy is purchased - Done
+If physical option is selected, quantity can be decided - Done
+
+Update GameDetail Viewmodel for new fields - Done
+Game page will have add to cart button for each option - Done
+After one is selected, there will only be one remove from cart button - Done
+
+Fix cart.additem and new cartItems in cart controller - Done
+Add physical add action for cart controller - Done
+
+Cart will only allow changing quantity for physical selected games - Done
+Cart will not be able to change game type between digital/physical - Done
+
+Order table will record whole order - Done
+Shipping will record only physical copies - Done
 
 --------------------------------------------------------
 
 Reports need live data
 
-Games have different physical and digital prices - Done
-All games have a digital version, not all games have a physical option - Done
-If digital, only one copy is purchased
-If physical option is selected, quantity can be decided
-
-Fixt cart.additem and new cartItems in cart controller
-Game page will have add to cart button for each option
-After one is selected, there will only be one remove from cart button
-
-Cart will only allow changing quantity for physical selected games
-Cart will not be able to change game type between digital/physical
-
-Order table will record whole order
-Shipping will record only physical copies
-
 --------------------------------------------------------
+
+Log 2.5 hours for 11/27
