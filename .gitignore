@@ -1,0 +1,6 @@
+**/.vs
+**/bin
+**/obj/Debug
+**/obj/*nuget*
+**/obj/*json
+GCDGameStore/GCDGameStore/email.json
