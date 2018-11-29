@@ -350,7 +350,76 @@ namespace GCDGameStore.Data
 
             if (!context.Order.Any())
             {
-                
+                var memberList = context.Member.ToList();
+                var gameDigitalList = context.Game.Where(g => g.PhysicalAvailable == false).ToList();
+                var gamePhysicalList = context.Game.Where(g => g.PhysicalAvailable).ToList();
+
+                if (memberList.Count >= 2)
+                {
+                    var orders = new Order[]
+                    {
+                        new Order
+                        {
+                            OrderDate = DateTime.Now,
+                            MemberId = memberList[0].MemberId,
+                            DigitalItems = new List<OrderItemDigital>(),
+                            PhysicalItems = new List<OrderItemPhysical>()
+                        },
+                        new Order
+                        {
+                            OrderDate = DateTime.Now,
+                            MemberId = memberList[1].MemberId,
+                            DigitalItems = new List<OrderItemDigital>(),
+                            PhysicalItems = new List<OrderItemPhysical>()
+                        }
+                    };
+
+                    if (gameDigitalList.Count >= 5)
+                    {
+                        var orderItems = new OrderItemDigital[]
+                        {
+                            new OrderItemDigital { GameId = gameDigitalList[0].GameId, Price = gameDigitalList[0].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[1].GameId, Price = gameDigitalList[1].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[2].GameId, Price = gameDigitalList[2].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[3].GameId, Price = gameDigitalList[3].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[4].GameId, Price = gameDigitalList[4].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[0].GameId, Price = gameDigitalList[0].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[1].GameId, Price = gameDigitalList[1].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[2].GameId, Price = gameDigitalList[2].DigitalPrice }
+                        };
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            orders[0].DigitalItems.Add(orderItems[i]);
+                        }
+
+                        for (int i = 5; i < orderItems.Length; i++)
+                        {
+                            orders[1].DigitalItems.Add(orderItems[i]);
+                        }
+
+                        if (gamePhysicalList.Count >= 3)
+                        {
+                            var physicalItems = new OrderItemPhysical[]
+                            {
+                                new OrderItemPhysical { GameId = gamePhysicalList[0].GameId, Price = (float)gamePhysicalList[0].PhysicalPrice, Quantity = 2},
+                                new OrderItemPhysical { GameId = gamePhysicalList[1].GameId, Price = (float)gamePhysicalList[1].PhysicalPrice, Quantity = 1 },
+                                new OrderItemPhysical { GameId = gamePhysicalList[2].GameId, Price = (float)gamePhysicalList[2].PhysicalPrice, Quantity = 3 }
+                            };
+
+                            for (int i = 0; i < physicalItems.Length; i++)
+                            {
+                                orders[0].PhysicalItems.Add(physicalItems[i]);
+                            }
+                        }
+
+                        context.Order.Add(orders[0]);
+                        context.Order.Add(orders[1]);
+                        context.SaveChanges();
+                    }
+                    
+
+                }
             }
 
         } // End Initialize()

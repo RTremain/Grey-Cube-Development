@@ -59,7 +59,8 @@ Order table will record whole order - Done
 Shipping will record only physical copies - Done
 
 Reports need live data - Done
+Seed the Order table - Done
 
 --------------------------------------------------------
 
-Seed the Order table
+
