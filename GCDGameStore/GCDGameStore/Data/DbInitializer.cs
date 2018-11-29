@@ -348,6 +348,11 @@ namespace GCDGameStore.Data
                 context.SaveChanges();
             }
 
+            if (!context.Order.Any())
+            {
+                
+            }
+
         } // End Initialize()
     }
 }

@@ -374,7 +374,10 @@ namespace GCDGameStore.Controllers
             }
 
             _cart.ClearCart();
-            _context.Shipment.Add(newShipment);
+            if (newShipment.ShipItems.Count > 0)
+            {
+                _context.Shipment.Add(newShipment);
+            }
             _context.Order.Add(newOrder);
             await _context.SaveChangesAsync();
             return RedirectToAction("Library", "Member");

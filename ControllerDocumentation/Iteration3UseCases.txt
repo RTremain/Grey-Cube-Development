@@ -58,10 +58,8 @@ Cart will not be able to change game type between digital/physical - Done
 Order table will record whole order - Done
 Shipping will record only physical copies - Done
 
---------------------------------------------------------
-
-Reports need live data
+Reports need live data - Done
 
 --------------------------------------------------------
 
-Log 2.5 hours for 11/27
+Seed the Order table
