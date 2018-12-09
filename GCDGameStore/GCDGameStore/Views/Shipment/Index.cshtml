@@ -1,0 +1,96 @@
+﻿@model IEnumerable<GCDGameStore.Models.Shipment>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Pending Shipments";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+}
+
+<h2>Pending Shipments</h2>
+
+
+<div class="row">
+    <div class="col-md-2">
+        <h4>@Html.DisplayNameFor(model => model.OrderDate)</h4>
+    </div>
+    <div class="col-md-2">
+        <h4>@Html.DisplayNameFor(model => model.Member.Username)</h4>
+    </div>
+    <div class="col-md-2">
+        <h4>Items</h4>
+    </div>
+    <div class="col-md-1">
+        <h4>Quantity</h4>
+    </div>
+    <div class="col-md-1">
+        <h4>Owner</h4>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-2"></div>
+</div>
+
+@foreach (var item in Model)
+{
+    <hr />
+    <div class="row">
+        <div class="col-md-2">
+            @Html.DisplayFor(modelItem => item.OrderDate)
+        </div>
+        <div class="col-md-2">
+            @Html.DisplayFor(modelItem => item.Member.Username)
+        </div>
+        <div class="col-md-3">
+            @foreach (var shipItem in item.ShipItems)
+            {
+                <div class="row">
+                    <div class="col-md-10">@shipItem.Game.Title</div>
+                    <div class="col-md-2">@shipItem.Quantity</div>
+                </div>
+            }
+        </div>
+        @if (item.IsProcessing)
+        {
+            <div class="col-md-1">
+                @Html.DisplayFor(modelItem => item.Employee.Name)
+            </div>
+            <div class="col-md-2">
+                @if (Context.Session.GetString("EmployeeId") != item.EmployeeId.ToString())
+                {
+                    <button class="btn btn-primary disabled">Shipped</button>
+                }
+                else
+                {
+                    <form asp-action="ShipmentSent">
+                        <button class="btn btn-primary" type="submit" name="shipmentId" value="@item.ShipmentId">Shipped</button>
+                    </form>
+                }
+            </div>
+            <div class="col-md-2">
+                @if (Context.Session.GetString("EmployeeId") != item.EmployeeId.ToString())
+                {
+                    <button class="btn btn-danger disabled">Cancel Processing</button>
+                }
+                else
+                {
+                    <form asp-action="CancelProcessing">
+                        <button class="btn btn-danger" type="submit" name="shipmentId" value="@item.ShipmentId">Cancel Processing</button>
+                    </form>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="col-md-1"></div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <form asp-action="BeginProcessing">
+                    <button class="btn btn-primary" type="submit" name="shipmentId" value="@item.ShipmentId">Begin Processing</button>
+                </form>
+            </div>
+        }
+
+    </div>
+        
+}
+        
+

@@ -1,0 +1,77 @@
+﻿@model List<GCDGameStore.ViewModels.CartViewModel>
+
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>Cart</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6"><h3>Title</h3></div>
+        <div class="col-md-2"><h3>Quantity</h3></div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-controller="Cart" asp-action="UpdateCart" method="post" role="form">
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <div class="row" style="height: 40px;">
+                        <div class="col-md-6">@Model[i].Game.Title</div>
+                        <div class="col-md-3">$@Model[i].Price</div>
+                        @if (Model[i].IsPhysical)
+	                    {
+                            <div class="col-md-3">
+                                @Html.HiddenFor(model => Model[i].GameId)
+                                @Html.HiddenFor(model => Model[i].IsPhysical)
+                                <input asp-for="@Model[i].Quantity" value="@Model[i].Quantity" type="number" min="1" max="9999" class="form-control" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                Digital
+                                @Html.HiddenFor(model => Model[i].GameId)
+                                @Html.HiddenFor(model => Model[i].IsPhysical)
+                                @Html.HiddenFor(model => Model[i].Quantity)
+                            </div>
+                        }
+
+                    </div>
+                }
+
+                <div class="row" style="height: 40px;">
+                    <input type="submit" value="Save Quantity Changes" class="btn btn-default" />
+                </div>
+
+            </form>
+
+            <div class="row" style="height: 40px;">
+                @if (Model.Count() == 0)
+                {
+                    <a href="#" class="btn btn-primary disabled">Check Out</a>
+                }
+                else
+                {
+                    <a asp-action="Checkout" class="btn btn-primary active">Check Out</a>
+                }
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <div class="row" style="height: 40px;">
+                    <div class="col">
+                        <form asp-controller="Cart" asp-action="DeleteItem">
+                            <button type="submit" name="GameId" value="@Model[i].GameId" class="btn btn-default">Remove From Cart</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

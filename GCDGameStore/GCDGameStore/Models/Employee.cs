@@ -15,7 +15,8 @@ namespace GCDGameStore.Models
         [Required]
         public string PwHash { get; set; }
 
-        
         public string PwSalt { get; set; }
+
+        public virtual ICollection<Shipment> Shipments { get; set; }
     }
 }

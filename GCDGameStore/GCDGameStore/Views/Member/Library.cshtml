@@ -7,9 +7,6 @@
 
 <h2>Library</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -37,16 +34,18 @@
                     <a asp-controller="Review" asp-action="Create" asp-route-id="@item.GameId">Create Review</a>
                 }
             </td>
-            <td>
                 @if (item.HasRating)
                 {
-                    @Html.DisplayFor(modelItem => item.Rating.RatingScore)
+                    <td style="padding-left:40px;">
+                        @Html.DisplayFor(modelItem => item.Rating.RatingScore)
+                    </td>
                 }
                 else
                 {
-                    <a asp-controller="Rating" asp-action="Create" asp-route-id="@item.GameId">Rate Game</a>
+                    <td>
+                        <a asp-controller="Rating" asp-action="Create" asp-route-id="@item.GameId">Rate Game</a>
+                    </td>
                 }
-            </td>
             <td>
                 <a asp-controller="MemberGame" asp-action="Details" asp-route-id="@item.GameId">Store Page</a>
             </td>

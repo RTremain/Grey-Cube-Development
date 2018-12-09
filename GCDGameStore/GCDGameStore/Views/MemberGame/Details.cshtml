@@ -10,66 +10,146 @@
 <div>
     <h4>MemberGameDetail</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-    </dl>
-    @if (Model.InLibrary)
-    {
-        <a asp-controller="MemberGame" asp-action="Download">Download Game</a>
-    }
-    else
-    {
-        <form asp-action="CreateLibraryItem">
-            <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Library</button>
-        </form>
-        @if (Model.OnWishlist)
-        {
-            <form asp-action="DeleteWishlistItem">
-                <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Remove From Wishlist</button>
-            </form>
-        }
-        else
-        {
-            <form asp-action="CreateWishlistItem">
-                <button type="submit" name="GameId" value="@Model.MemberGameDetailId">Add To Wishlist</button>
-            </form>
-        }
-    }
-
-
-
-    @if (Model.HasRating)
-    {
-
-    }
-    else
-    {
-
-    }
-
-    @if (Model.HasReview)
-    {
-
-    }
-    else
-    {
-
-    }
-
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ReleaseDate)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <h3>Average Rating</h3>
+            @if (Model.HasRating)
+            {
+                <h4>@Model.AverageRating</h4>
+            }
+            else
+            {
+                <h4>N/A</h4>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @if (Model.InLibrary)
+            {
+                <div class="col-md-4">
+                    <a asp-controller="MemberGame" asp-action="Download" class="btn btn-primary">Download Game</a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4">
+                    @if (Model.OnWishlist)
+                    {
+                        <form asp-action="DeleteWishlistItem">
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-danger">Remove From Wishlist</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="CreateWishlistItem">
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Wishlist</button>
+                        </form>
+                    }
+                </div>
+                <div class="col-md-8">
+                    @if (!Model.OnCart)
+                    {
+                        @if (!Model.PhysicalAvailable)
+                        {
+                            <div class="row">
+                                <div class="col-md-12">Digital: $@Model.DigitalPrice</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form asp-controller="Cart" asp-action="AddItem" method="post">
+                                        <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-md-6">Digital: $@Model.DigitalPrice</div>
+                                <div class="col-md-6">Physical: $@Model.PhysicalPrice</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form asp-controller="Cart" asp-action="AddItem" method="post">
+                                        <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Cart</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <form asp-controller="Cart" asp-action="AddPhysicalItem" method="post">
+                                        <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-primary">Add To Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <form asp-controller="Cart" asp-action="DeleteItemFromGameDetails" method="post">
+                            <button type="submit" name="GameId" value="@Model.MemberGameDetailId" class="btn btn-danger">Remove From Cart</button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <a asp-controller="Member" asp-action="Library" class="btn btn-primary">Return To Library</a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="Member" asp-action="Wishlist" class="btn btn-primary">Return To Wishlist</a>
+            </div>
+            <div class="col-md-4">
+                <a asp-action="Index" class="btn btn-primary">Return To All Games</a>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-controller="Member" asp-action="Library">Return To Library</a> | 
-    <a asp-controller="Member" asp-action="Wishlist">Return To Wishlist</a> | 
-    <a asp-action="Index">Return To All Games</a>
-</div>
+@if (Model.HasReview)
+{
+
+    @for (int i = 0; i < Model.Reviews.Count; i++)
+    {
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Username:
+            </dt>
+            <dd>
+                @Model.Reviews.ElementAt(i).Member.Username
+            </dd>
+            <dt>
+                Recommendation:
+            </dt>
+            @if (Model.Reviews.ElementAt(i).Recommended)
+            {
+                <dd>Recommended</dd>
+            }
+            else
+            {
+                <dd>Not Recommended</dd>
+            }
+            <dt>Review</dt>
+            <dd>@Model.Reviews.ElementAt(i).ReviewText</dd>
+        </dl>
+    }
+}

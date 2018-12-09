@@ -1,0 +1,66 @@
+GCD - Iteration 3 Use Cases
+
+--------------------------------------------------------
+
+14 Visitor registers - Done
+15 Log In - Done
+40 Log out - Done
+18 Change Password - Done
+17 Reset password - Done
+
+24 Search games - Done
+
+34 Add to cart - Done
+45 View cart - Done
+46 Edit cart - Done
+35 Delete from cart - Done
+36 Check out - Done
+37 Submit order - Done
+
+43 View pending shipments - Done
+13 Update status of ship
+
+ - Done
+
+11 Publish review - Done
+41 View pending reviews - Done
+42 Reject review
+
+ - Done
+
+44 View own wishlist - Done
+31 View friend's wish list
+
+
+ - Done
+
+Game views show reviews and ratings - Done
+Member sets favourite platforms - Done
+Member sets favourite genres - Done
+
+--------------------------------------------------------
+
+Games have different physical and digital prices - Done
+All games have a digital version, not all games have a physical option - Done
+If digital, only one copy is purchased - Done
+If physical option is selected, quantity can be decided - Done
+
+Update GameDetail Viewmodel for new fields - Done
+Game page will have add to cart button for each option - Done
+After one is selected, there will only be one remove from cart button - Done
+
+Fix cart.additem and new cartItems in cart controller - Done
+Add physical add action for cart controller - Done
+
+Cart will only allow changing quantity for physical selected games - Done
+Cart will not be able to change game type between digital/physical - Done
+
+Order table will record whole order - Done
+Shipping will record only physical copies - Done
+
+Reports need live data - Done
+Seed the Order table - Done
+
+--------------------------------------------------------
+
+

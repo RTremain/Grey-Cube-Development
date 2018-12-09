@@ -34,14 +34,14 @@ namespace GCDGameStore.Data
 
                 var games = new Game[]
                 {
-                    new Game { Title = "Doom", ReleaseDate = new DateTime(2016, 5, 13) },
-                    new Game { Title = "Monster Hunter: World", ReleaseDate = new DateTime(2018, 8, 9) },
-                    new Game { Title = "Starcraft 2", ReleaseDate = new DateTime(2010, 7, 10) },
-                    new Game { Title = "Call of Duty: Modern Warfare", ReleaseDate = new DateTime(2007, 11, 7) },
-                    new Game { Title = "The Elder Scrolls V: Skyrim", ReleaseDate = new DateTime(2011, 11, 11) },
-                    new Game { Title = "Minecraft", ReleaseDate = new DateTime(2009, 5, 17) },
-                    new Game { Title = "Battlefield 3", ReleaseDate = new DateTime(2011, 10, 25) },
-                    new Game { Title = "Fallout 4", ReleaseDate = new DateTime(2015, 11, 10) }
+                    new Game { Title = "Doom", ReleaseDate = new DateTime(2016, 5, 13), DigitalPrice = 40.0f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Monster Hunter: World", ReleaseDate = new DateTime(2018, 8, 9), DigitalPrice = 35.99f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Starcraft 2", ReleaseDate = new DateTime(2010, 7, 10), DigitalPrice = 22.45f, PhysicalAvailable = true, PhysicalPrice = 27.45f },
+                    new Game { Title = "Call of Duty: Modern Warfare", ReleaseDate = new DateTime(2007, 11, 7), DigitalPrice = 19.85f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "The Elder Scrolls V: Skyrim", ReleaseDate = new DateTime(2011, 11, 11), DigitalPrice = 29.99f, PhysicalAvailable = true, PhysicalPrice = 39.99f },
+                    new Game { Title = "Minecraft", ReleaseDate = new DateTime(2009, 5, 17), DigitalPrice = 39.99f, PhysicalAvailable = true, PhysicalPrice = 49.99f },
+                    new Game { Title = "Battlefield 3", ReleaseDate = new DateTime(2011, 10, 25), DigitalPrice = 50.22f, PhysicalAvailable = false, PhysicalPrice = null },
+                    new Game { Title = "Fallout 4", ReleaseDate = new DateTime(2015, 11, 10), DigitalPrice = 49.99f, PhysicalAvailable = false, PhysicalPrice = null }
                 };
 
                 foreach (Game g in games)
@@ -75,10 +75,12 @@ namespace GCDGameStore.Data
                 context.SaveChanges();
             }
 
+            var jalapegnome = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
+
             if (!context.Library.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                
+                if (jalapegnome != null)
                 {
                     int[] gameIds = new int[2];
                     var gameList = context.Game.ToList();
@@ -87,8 +89,8 @@ namespace GCDGameStore.Data
                     {
                         var libraryGames = new Library[]
                         {
-                            new Library { MemberId = memberId.MemberId, GameId = gameList[0].GameId },
-                            new Library { MemberId = memberId.MemberId, GameId = gameList[1].GameId }
+                            new Library { MemberId = jalapegnome.MemberId, GameId = gameList[0].GameId },
+                            new Library { MemberId = jalapegnome.MemberId, GameId = gameList[1].GameId }
                         };
 
                         foreach (Library l in libraryGames)
@@ -104,8 +106,7 @@ namespace GCDGameStore.Data
 
             if (!context.Wishlist.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                if (jalapegnome != null)
                 {
                     int[] gameIds = new int[2];
                     var gameList = context.Game.ToList();
@@ -114,8 +115,8 @@ namespace GCDGameStore.Data
                     {
                         var wishlistGames = new Wishlist[]
                         {
-                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[2].GameId },
-                            new Wishlist { MemberId = memberId.MemberId, GameId = gameList[3].GameId }
+                            new Wishlist { MemberId = jalapegnome.MemberId, GameId = gameList[2].GameId },
+                            new Wishlist { MemberId = jalapegnome.MemberId, GameId = gameList[3].GameId }
                         };
 
                         foreach (Wishlist w in wishlistGames)
@@ -131,8 +132,8 @@ namespace GCDGameStore.Data
 
             if (!context.CreditCard.Any())
             {
-                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (member != null)
+                
+                if (jalapegnome != null)
                 {
                     var creditCards = new CreditCard[]
                     {
@@ -146,7 +147,7 @@ namespace GCDGameStore.Data
                             City = "Waterloo",
                             Province = "Ontario",
                             PostalCode = "A1B 2C3",
-                            MemberId = member.MemberId
+                            MemberId = jalapegnome.MemberId
                         },
                         new CreditCard
                         {
@@ -158,7 +159,7 @@ namespace GCDGameStore.Data
                             City = "Waterloo",
                             Province = "Ontario",
                             PostalCode = "A1B 2C3",
-                            MemberId = member.MemberId
+                            MemberId = jalapegnome.MemberId
                         }
                     };
 
@@ -172,7 +173,6 @@ namespace GCDGameStore.Data
 
             if (!context.Friend.Any())
             {
-                var member = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
                 var friends = new Member[]
                 {
                     context.Member.FirstOrDefault(m => m.Username == "Pyrogue"),
@@ -180,18 +180,18 @@ namespace GCDGameStore.Data
                     context.Member.FirstOrDefault(m => m.Username == "AdviceBoulder")
                 };
 
-                if (member != null)
+                if (jalapegnome != null)
                 {
 
                     
                     var friendlist = new Friend[]
                     {
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[0].MemberId },
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[1].MemberId },
-                        new Friend { MemberId = member.MemberId, FriendMemberId = friends[2].MemberId },
-                        new Friend { MemberId = friends[0].MemberId, FriendMemberId = member.MemberId },
-                        new Friend { MemberId = friends[1].MemberId, FriendMemberId = member.MemberId },
-                        new Friend { MemberId = friends[2].MemberId, FriendMemberId = member.MemberId }
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[0].MemberId },
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[1].MemberId },
+                        new Friend { MemberId = jalapegnome.MemberId, FriendMemberId = friends[2].MemberId },
+                        new Friend { MemberId = friends[0].MemberId, FriendMemberId = jalapegnome.MemberId },
+                        new Friend { MemberId = friends[1].MemberId, FriendMemberId = jalapegnome.MemberId },
+                        new Friend { MemberId = friends[2].MemberId, FriendMemberId = jalapegnome.MemberId }
 
                     };
 
@@ -228,8 +228,7 @@ namespace GCDGameStore.Data
 
             if (!context.Attendance.Any())
             {
-                var memberId = context.Member.FirstOrDefault(m => m.Username == "Jalapegnome");
-                if (memberId != null)
+                if (jalapegnome != null)
                 {
                     var eventList = context.Event.ToList();
 
@@ -237,8 +236,8 @@ namespace GCDGameStore.Data
                     {
                         var attendanceList = new Attendance[]
                         {
-                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[0].EventId },
-                            new Attendance { MemberId = memberId.MemberId, EventId = eventList[1].EventId }
+                            new Attendance { MemberId = jalapegnome.MemberId, EventId = eventList[0].EventId },
+                            new Attendance { MemberId = jalapegnome.MemberId, EventId = eventList[1].EventId }
                         };
 
                         foreach (Attendance a in attendanceList)
@@ -250,6 +249,177 @@ namespace GCDGameStore.Data
 
                 }
 
+            }
+
+            if (!context.Shipment.Any())
+            {
+                if (jalapegnome != null)
+                {
+                    var shipments = new Shipment[]
+                    {
+                        new Shipment { OrderDate = new DateTime(2018, 11, 12, 19, 30, 12), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false },
+                        new Shipment { OrderDate = new DateTime(2018, 11, 14, 12, 44, 35), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false },
+                        new Shipment { OrderDate = new DateTime(2018, 11, 16, 15, 16, 43), MemberId = jalapegnome.MemberId, IsShipped = false, IsProcessing = false }
+
+                    };
+
+                    foreach (Shipment s in shipments)
+                    {
+                        context.Shipment.Add(s);
+                    }
+
+                    context.SaveChanges();
+                }
+
+            }
+
+            if (!context.ShipItem.Any())
+            {
+                var shipmentList = context.Shipment.ToList();
+
+                if (shipmentList.Count >= 3)
+                {
+                    var shipItems = new ShipItem[]
+                    {
+                        new ShipItem { GameId = 1, Quantity = 2, ShipmentId = shipmentList[0].ShipmentId },
+                        new ShipItem { GameId = 3, Quantity = 1, ShipmentId = shipmentList[0].ShipmentId },
+                        new ShipItem { GameId = 2, Quantity = 1, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 4, Quantity = 3, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 5, Quantity = 5, ShipmentId = shipmentList[1].ShipmentId },
+                        new ShipItem { GameId = 6, Quantity = 1, ShipmentId = shipmentList[2].ShipmentId }
+                    };
+
+                    foreach (ShipItem s in shipItems)
+                    {
+                        context.ShipItem.Add(s);
+                    }
+
+                    context.SaveChanges();
+                }
+            }
+
+            if (!context.Platform.Any())
+            {
+                var platforms = new Platform[]
+                {
+                    new Platform { Name = "PSX" },
+                    new Platform { Name = "N64" },
+                    new Platform { Name = "Xbox" },
+                    new Platform { Name = "PS2" },
+                    new Platform { Name = "Wii" },
+                    new Platform { Name = "Xbox 360" },
+                    new Platform { Name = "PS3" },
+                    new Platform { Name = "Wii U" },
+                    new Platform { Name = "Xbox One" },
+                    new Platform { Name = "PS4" },
+                    new Platform { Name = "Switch" },
+                    new Platform { Name = "Android" },
+                    new Platform { Name = "iOS" },
+                    new Platform { Name = "PC" },
+                    new Platform { Name = "Linux" }
+                };
+
+                foreach (Platform item in platforms)
+                {
+                    context.Platform.Add(item);
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.Genre.Any())
+            {
+                var genres = new Genre[]
+                {
+                    new Genre { Name = "Action" },
+                    new Genre { Name = "Adventure" },
+                    new Genre { Name = "RPG" },
+                    new Genre { Name = "Shooter" },
+                    new Genre { Name = "Platformer" },
+                    new Genre { Name = "Puzzle" },
+                    new Genre { Name = "MMO" }
+                };
+
+                foreach (Genre g in genres)
+                {
+                    context.Genre.Add(g);
+                }
+
+                context.SaveChanges();
+            }
+
+            if (!context.Order.Any())
+            {
+                var memberList = context.Member.ToList();
+                var gameDigitalList = context.Game.Where(g => g.PhysicalAvailable == false).ToList();
+                var gamePhysicalList = context.Game.Where(g => g.PhysicalAvailable).ToList();
+
+                if (memberList.Count >= 2)
+                {
+                    var orders = new Order[]
+                    {
+                        new Order
+                        {
+                            OrderDate = DateTime.Now,
+                            MemberId = memberList[0].MemberId,
+                            DigitalItems = new List<OrderItemDigital>(),
+                            PhysicalItems = new List<OrderItemPhysical>()
+                        },
+                        new Order
+                        {
+                            OrderDate = DateTime.Now,
+                            MemberId = memberList[1].MemberId,
+                            DigitalItems = new List<OrderItemDigital>(),
+                            PhysicalItems = new List<OrderItemPhysical>()
+                        }
+                    };
+
+                    if (gameDigitalList.Count >= 5)
+                    {
+                        var orderItems = new OrderItemDigital[]
+                        {
+                            new OrderItemDigital { GameId = gameDigitalList[0].GameId, Price = gameDigitalList[0].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[1].GameId, Price = gameDigitalList[1].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[2].GameId, Price = gameDigitalList[2].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[3].GameId, Price = gameDigitalList[3].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[4].GameId, Price = gameDigitalList[4].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[0].GameId, Price = gameDigitalList[0].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[1].GameId, Price = gameDigitalList[1].DigitalPrice },
+                            new OrderItemDigital { GameId = gameDigitalList[2].GameId, Price = gameDigitalList[2].DigitalPrice }
+                        };
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            orders[0].DigitalItems.Add(orderItems[i]);
+                        }
+
+                        for (int i = 5; i < orderItems.Length; i++)
+                        {
+                            orders[1].DigitalItems.Add(orderItems[i]);
+                        }
+
+                        if (gamePhysicalList.Count >= 3)
+                        {
+                            var physicalItems = new OrderItemPhysical[]
+                            {
+                                new OrderItemPhysical { GameId = gamePhysicalList[0].GameId, Price = (float)gamePhysicalList[0].PhysicalPrice, Quantity = 2},
+                                new OrderItemPhysical { GameId = gamePhysicalList[1].GameId, Price = (float)gamePhysicalList[1].PhysicalPrice, Quantity = 1 },
+                                new OrderItemPhysical { GameId = gamePhysicalList[2].GameId, Price = (float)gamePhysicalList[2].PhysicalPrice, Quantity = 3 }
+                            };
+
+                            for (int i = 0; i < physicalItems.Length; i++)
+                            {
+                                orders[0].PhysicalItems.Add(physicalItems[i]);
+                            }
+                        }
+
+                        context.Order.Add(orders[0]);
+                        context.Order.Add(orders[1]);
+                        context.SaveChanges();
+                    }
+                    
+
+                }
             }
 
         } // End Initialize()

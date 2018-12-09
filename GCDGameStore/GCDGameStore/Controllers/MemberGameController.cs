@@ -18,12 +18,14 @@ namespace GCDGameStore.Controllers
         private readonly GcdGameStoreContext _context;
         private readonly ILogger _logger;
         private readonly LoginStatus _loginStatus;
+        private readonly Cart _cart;
 
         public MemberGameController(GcdGameStoreContext context, ILogger<MemberGameController> logger, IHttpContextAccessor accessor)
         {
             _context = context;
             _logger = logger;
             _loginStatus = new LoginStatus(accessor);
+            _cart = new Cart(accessor, logger);
         }
 
         // GET: MemberGame
@@ -36,6 +38,21 @@ namespace GCDGameStore.Controllers
             }
 
             return View(await _context.Game.ToListAsync());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchIndex(string searchText)
+        {
+            if (_loginStatus.IsNotLoggedIn())
+            {
+                _logger.LogInformation("Redirect: {Message}", "Redirecting to login");
+                return RedirectToAction("Login", "Member");
+            }
+
+            var results = await _context.Game.Where(g => g.Title.Contains(searchText)).ToListAsync();
+
+            return View("Index", results);
         }
 
         public IActionResult Download()
@@ -178,10 +195,28 @@ namespace GCDGameStore.Controllers
             {
                 MemberGameDetail.InLibrary = true;
             }
-            else if (await wishlistEntry != null)
+            else
             {
-                MemberGameDetail.OnWishlist = true;
+                MemberGameDetail.OnCart = _cart.OnCart(gameId);
+
+                if (await wishlistEntry != null)
+                {
+                    MemberGameDetail.OnWishlist = true;
+                }
             }
+
+            var reviews = await _context.Review
+                                        .Where(r => r.GameId == gameId)
+                                        .Where(r => r.Approved == true)
+                                        .Include(r => r.Member)
+                                        .ToListAsync();
+
+            if (reviews != null)
+            {
+                MemberGameDetail.HasReview = true;
+                MemberGameDetail.Reviews = reviews;
+            }
+
 
             return View(MemberGameDetail);
         }

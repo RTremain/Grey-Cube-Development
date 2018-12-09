@@ -1,0 +1,44 @@
+﻿@model IEnumerable<GCDGameStore.ViewModels.MemberPlatformViewModel>
+
+@{
+    ViewData["Title"] = "Favourite Platforms";
+    Layout = "~/Views/Shared/_MemberLayout.cshtml";
+}
+
+<h2>Favourite Genres</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Added)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (item.Added)
+                {
+                    <form asp-action="Delete">
+                        <button type="submit" name="platformId" value="@item.MemberPlatformViewModelId" class="btn btn-danger">Remove Favourite</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Create">
+                        <button type="submit" name="platformId" value="@item.MemberPlatformViewModelId" class="btn btn-primary">Add Favourite</button>
+                    </form>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
